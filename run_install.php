@@ -59,7 +59,7 @@ if ($schritt === 1) {
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// Script d'auto-scroll pour que la page défile vers le bas pendant l'exécution
+// On conserve le script d'auto-scroll
 echo "  <script>
         setInterval(function() {
             window.scrollTo(0, document.body.scrollHeight);
@@ -69,6 +69,7 @@ echo "</head>\n";
 echo "<body>\n";
 echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
 echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
+// Ici, on utilise l'ancien style inline pour le bloc <pre>
 echo "<pre style='background:rgba(255,255,255,0.1); border-radius:6px; padding:15px;'>\n";
 ob_flush();
 flush();
@@ -106,7 +107,7 @@ if ($schritt === 1 || $schritt === 2) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // Mettre à jour le statut dans la BDD
+            // MAJ BDD
             $newStatus = $schritt;
             $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
             $updateStmt->bind_param("ii", $newStatus, $version_id);
