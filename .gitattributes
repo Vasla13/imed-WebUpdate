@@ -1,1 +1,2 @@
 uploads/1741247848_imedWeb_6.005.000.000_p5_gh.tgz filter=lfs diff=lfs merge=lfs -text
+*.tgz filter=lfs diff=lfs merge=lfs -text
