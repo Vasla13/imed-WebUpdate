@@ -1,0 +1,688 @@
+/* ====================================================================
+   style.css – NeonFlow 2.0 – Design Neon & Glassmorphism Amélioré
+   ==================================================================== */
+
+/* ---------- Variables ---------- */
+:root {
+  /* Couleurs principales */
+  --color-bg: #0f0f17;
+  --color-accent1: #ff0080;
+  --color-accent2: #b400ff;
+  --color-white: #ffffff;
+  --color-text: #f1f1f1;
+
+  /* Effet glass */
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.25);
+
+  /* Rayons et vitesse de transition */
+  --radius: 10px;
+  --transition-speed: 0.3s;
+
+  /* Ombrages & effets */
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --glow-color: rgba(255, 0, 128, 0.6);
+}
+
+/* ---------- Reset global ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background: linear-gradient(135deg, var(--color-accent1), var(--color-accent2));
+  background-size: 400% 400%;
+  animation: neonGradient 12s ease infinite;
+  color: var(--color-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Animation du gradient d'arrière-plan */
+@keyframes neonGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ---------- Layout principal ---------- */
+.layout {
+  display: flex;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 240px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px 20px;
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 4px 0 10px var(--shadow-color);
+}
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.sidebar-logo .logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.7rem;
+  color: var(--color-white);
+}
+.sidebar-logo .logo-text span {
+  color: var(--color-accent1);
+  text-shadow: 0 0 5px var(--color-accent1);
+}
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar-nav ul li {
+  margin-bottom: 20px;
+}
+.sidebar-nav ul li a {
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--radius);
+  transition: background var(--transition-speed), transform var(--transition-speed);
+}
+.sidebar-nav ul li a i {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+.sidebar-nav ul li a:hover {
+  background: rgba(255,255,255,0.1);
+  transform: scale(1.02);
+}
+.sidebar-footer {
+  text-align: center;
+}
+.btn-logout {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  padding: 10px 15px;
+  border-radius: var(--radius);
+  color: var(--color-white);
+  text-decoration: none;
+  transition: background var(--transition-speed), transform var(--transition-speed);
+}
+.btn-logout:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.03);
+}
+
+/* ---------- Contenu principal ---------- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.breadcrumb {
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.1);
+  margin: 10px;
+  border-radius: var(--radius);
+  color: var(--color-white);
+}
+.main-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: var(--color-accent1);
+  margin: 0;
+  text-shadow: 0 0 5px var(--color-accent1);
+}
+.content {
+  flex: 1;
+  padding: 30px;
+}
+.main-footer {
+  text-align: center;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+  color: var(--color-white);
+}
+
+/* ---------- Page d'accueil (hero) ---------- */
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 30px;
+}
+.hero-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  border-radius: var(--radius);
+  text-align: center;
+  padding: 40px 50px;
+  max-width: 700px;
+  width: 100%;
+}
+.hero-glass h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.4rem;
+  margin-bottom: 15px;
+  color: var(--color-white);
+  text-shadow: 0 0 6px var(--color-accent1);
+}
+.hero-glass h1 span {
+  color: var(--color-accent1);
+}
+.hero-glass p {
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+.options a.btn {
+  margin: 0 8px;
+}
+
+/* ---------- Tableaux ---------- */
+.table-responsive {
+  overflow-x: auto;
+}
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+.table-responsive table th,
+.table-responsive table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: var(--color-white);
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+.table-responsive table th {
+  background: rgba(255,255,255,0.1);
+  text-transform: uppercase;
+}
+.table-responsive table tr:hover td {
+  background: rgba(255,255,255,0.07);
+}
+
+/* Bouton de téléchargement */
+.table-responsive a.download-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  background: var(--color-accent1);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background var(--transition-speed), transform var(--transition-speed), box-shadow 0.2s;
+}
+.table-responsive a.download-btn:hover {
+  background: var(--color-accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+  background: var(--color-accent1);
+  color: var(--color-white);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background var(--transition-speed), transform var(--transition-speed), box-shadow 0.3s;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  position: relative;
+}
+.btn:hover {
+  background: var(--color-accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+/* ---------- Formulaires (ex: login/registration) ---------- */
+.form-container {
+  background-color: #fff;
+  color: #333;
+  padding: 40px;
+  max-width: 400px;
+  width: 100%;
+  margin: 80px auto;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+.form-container h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--color-accent1);
+  text-align: center;
+  margin-bottom: 20px;
+}
+.form-container label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container input[type="email"],
+.form-container input[type="date"],
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+  background: #fff;
+  transition: border 0.2s;
+}
+.form-container input::placeholder {
+  color: #999;
+}
+.form-container input[type="submit"] {
+  width: 100%;
+  background-color: var(--color-accent1);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s;
+}
+.form-container input[type="submit"]:hover {
+  background-color: var(--color-accent2);
+  transform: translateY(-2px);
+}
+.form-container p.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.form-container p {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.form-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  background: #fff;
+  font-size: 1rem;
+}
+
+/* ===============================
+   MODAL & FORMULAIRE "VERSION HINZUFÜGEN"
+   =============================== */
+
+/* Animation d'apparition de la modale */
+@keyframes modalAppear {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Conteneur de la modale (overlay) */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* Boîte modale avec effet glassmorphism */
+.modal-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  border-radius: 10px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: modalAppear 0.4s ease-out;
+}
+
+/* Bouton de fermeture de la modale */
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.close-modal:hover {
+  color: var(--color-accent1);
+}
+
+/* Titre de la modale */
+.modal-box h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: var(--color-accent1);
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 0 0 4px var(--color-accent1);
+}
+
+/* Formulaire "Version Hinzufügen" */
+.version-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.version-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.version-form .form-group label {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 5px;
+}
+.version-form .form-group input,
+.version-form .form-group textarea {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s ease, background 0.3s ease;
+}
+.version-form .form-group input::placeholder,
+.version-form .form-group textarea::placeholder {
+  color: #ddd;
+}
+.version-form .form-group input:focus,
+.version-form .form-group textarea:focus {
+  border-color: #ff0080;
+  background: rgba(255, 255, 255, 0.25);
+}
+.version-form textarea {
+  resize: vertical;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.form-actions .btn {
+  background: #ff0080;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.form-actions .btn:hover {
+  background: #b400ff;
+  transform: translateY(-2px);
+}
+
+/* Zone de Drag & Drop */
+.upload-dropzone {
+  position: relative;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.upload-dropzone p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.upload-dropzone.dragover {
+  background: rgba(255, 0, 128, 0.2);
+  border-color: #ff0080;
+}
+.dropzone-input {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* ---------- Actions (boutons dans la table) ---------- */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===============================
+   AJOUTS POUR LA PAGE admin.php
+   =============================== */
+
+/* En-tête spécifique pour la page admin */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Titre à gauche, bouton à droite */
+  margin-bottom: 20px;
+}
+
+/* Nouveau bouton "Version hinzufügen" */
+.add-version-btn {
+  background: linear-gradient(90deg, var(--color-accent1), var(--color-accent2));
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.add-version-btn i {
+  font-size: 1.1rem;
+}
+.add-version-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* ---------- Responsive ---------- */
+@media screen and (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: none;
+  }
+  .sidebar-logo {
+    margin-bottom: 0;
+  }
+  .sidebar-nav ul {
+    display: flex;
+    gap: 15px;
+  }
+  .sidebar-footer {
+    display: none;
+  }
+  .home-container {
+    padding: 20px;
+  }
+  .hero-glass {
+    padding: 30px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-header h1 {
+    font-size: 1.8rem;
+  }
+  .sidebar-nav ul li a {
+    font-size: 1rem;
+  }
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+  .hero-glass h1 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .layout {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* ---------- Fancy Filter Bar (pour index.php) ---------- */
+.fancy-filter-bar.underline-neon {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 20px;
+  margin: 20px 0;
+  background: var(--glass-bg);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
+  position: relative;
+  border: 3px solid transparent;
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+.fancy-filter-bar.underline-neon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  padding: 2px;
+  background: linear-gradient(45deg, var(--color-accent1), var(--color-accent2));
+  z-index: -1;
+  filter: blur(3px);
+}
+.filter-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.filter-icon {
+  color: var(--color-accent1);
+  margin-right: 6px;
+  font-size: 1.1rem;
+}
+.filter-item input[type="text"],
+.filter-item input[type="date"] {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+  padding: 6px 0;
+  min-width: 120px;
+  font-size: 0.95rem;
+  transition: border var(--transition-speed), box-shadow var(--transition-speed);
+  outline: none;
+}
+.filter-item input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.8;
+  filter: invert(1);
+  cursor: pointer;
+}
+.filter-item input[type="text"]::placeholder,
+.filter-item input[type="date"]::placeholder {
+  color: #ccc;
+  opacity: 0.7;
+}
+.filter-item input[type="text"]:focus,
+.filter-item input[type="date"]:focus {
+  border-bottom: 2px solid var(--color-accent1);
+  box-shadow: 0 2px 8px var(--color-accent1);
+}
+.fancy-filter-btn {
+  background: var(--color-accent1);
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background var(--transition-speed), transform var(--transition-speed);
+}
+.fancy-filter-btn:hover {
+  background: var(--color-accent2);
+  transform: translateY(-2px);
+}
