@@ -21,7 +21,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- La colonne ID est masquée -->
+        <!-- Colonne ID supprimée -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -36,7 +36,7 @@ ob_start();
           // Récupération du statut (0 si non défini)
           $status = isset($row['installation_status']) ? (int)$row['installation_status'] : 0;
 
-          // Déterminer le bouton/nextStep selon le statut
+          // Déterminer le bouton/nextStep
           if ($status === 0) {
               $nextStep = 1;
               $btnText = "Extraktion starten";
@@ -51,7 +51,7 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien si status=3 avec l'IP dynamique du serveur
+          // Générer le lien si status = 3 avec l'IP dynamique du serveur
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];

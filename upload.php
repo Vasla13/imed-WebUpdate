@@ -33,39 +33,16 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
 // Déterminer le mode d'upload
 $upload_mode = $_POST['upload_mode'] ?? 'local';
 
-$targetFile = ""; // Variable qui contiendra le chemin final vers le fichier
-
-$allowed_extensions = ['zip', 'tar', 'gz', 'tgz', 'rar'];
-
 if ($upload_mode === 'internet') {
-    // Mode Internet : télécharger le fichier depuis l'URL
+    // Mode Internet : récupérer et valider l'URL
     $file_url = trim($_POST['file_url'] ?? '');
     if (empty($file_url) || !filter_var($file_url, FILTER_VALIDATE_URL)) {
         die("Fehler: Ungültige oder fehlende URL.");
     }
-    $contents = @file_get_contents($file_url);
-    if ($contents === false) {
-        die("Fehler: Datei konnte nicht von der URL heruntergeladen werden.");
-    }
-    // Extraire l'extension à partir de l'URL
-    $url_path = parse_url($file_url, PHP_URL_PATH);
-    $file_extension = strtolower(pathinfo($url_path, PATHINFO_EXTENSION));
-    if (!in_array($file_extension, $allowed_extensions)) {
-        die("Fehler: Ungültiger Dateityp.");
-    }
-    $originalFileName = basename($url_path);
-    $targetDir = "uploads/";
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0755, true);
-    }
-    $newFileName = time() . "_" . $originalFileName;
-    $targetFile = $targetDir . $newFileName;
-    $bytes_written = file_put_contents($targetFile, $contents);
-    if ($bytes_written === false) {
-        die("Fehler: Datei konnte nicht gespeichert werden.");
-    }
+    // On stocke l'URL directement dans la base de données
+    $targetFile = $file_url;
 } else {
-    // Mode Local : vérifier et déplacer le fichier uploadé
+    // Mode local : traiter le fichier uploadé
     if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
 
         // Limite 5GB
@@ -74,16 +51,21 @@ if ($upload_mode === 'internet') {
             die("Fehler: Die Datei ist größer als 5 GB.");
         }
 
+        // Extensions autorisées
+        $allowed_extensions = ['zip', 'tar', 'gz', 'tgz', 'rar'];
         $originalFileName = basename($_FILES['file']['name']);
         $file_extension = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
         if (!in_array($file_extension, $allowed_extensions)) {
             die("Fehler: Ungültiger Dateityp.");
         }
 
+        // Dossier d'upload
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
+
+        // Nom de fichier unique
         $newFileName = time() . "_" . $originalFileName;
         $targetFile = $targetDir . $newFileName;
 
