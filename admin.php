@@ -21,7 +21,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- Colonne ID masquée -->
+        <!-- La colonne ID est masquée -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -33,10 +33,10 @@ ob_start();
     </thead>
     <tbody>
       <?php while ($row = $result->fetch_assoc()):
-          // Récupération du statut (0 par défaut)
+          // Récupération du statut (0 si non défini)
           $status = isset($row['installation_status']) ? (int)$row['installation_status'] : 0;
 
-          // Définir le prochain étape et le texte du bouton selon le statut
+          // Déterminer le bouton/nextStep selon le statut
           if ($status === 0) {
               $nextStep = 1;
               $btnText = "Extraktion starten";
@@ -51,28 +51,22 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien s'il s'agit d'une version installée (status = 3)
+          // Générer le lien si status=3 avec l'IP dynamique du serveur
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
-              // Si le champ DATEIEN commence par "http", on considère que c'est déjà un lien (ex : lien Drive)
-              if (stripos($archivePath, "http") === 0) {
-                  $siteLink = $archivePath;
+              $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
+              if (preg_match($pattern, $archivePath, $matches)) {
+                  $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
+                  $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+                  $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
               } else {
-                  // Sinon, on tente d'extraire le nom du dossier pour construire le lien local
-                  $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
-                  if (preg_match($pattern, $archivePath, $matches)) {
-                      $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
-                      $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
-                      $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
-                  } else {
-                      $siteLink = "#";
-                  }
+                  $siteLink = "#";
               }
           }
       ?>
       <tr>
-        <!-- Colonne ID masquée -->
+        <!-- Colonne ID supprimée -->
         <td><?= htmlspecialchars($row['VERSION']); ?></td>
         <td><?= htmlspecialchars($row['RELEASE_DATE']); ?></td>
         <td>
@@ -124,7 +118,7 @@ ob_start();
     <button class="close-modal" aria-label="Close">&times;</button>
     <h2>Version Hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Choix du mode d'upload -->
+      <!-- Sélection du mode d'upload -->
       <div class="form-group">
         <label>Upload-Modus:</label>
         <div class="toggle-container">
@@ -181,7 +175,7 @@ ob_start();
     }
   });
 
-  // Gestion de l'ouverture/fermeture de la modale
+  // Gérer l'ouverture/fermeture de la modale
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");

@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
 $backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
 $backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
 
-// Récupérer params
+// Récupérer les paramètres
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -59,9 +59,8 @@ if ($schritt === 1) {
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// Ajout du script pour auto-scroller
+// Script d'auto-scroll pour que la page défile vers le bas pendant l'exécution
 echo "  <script>
-        // Auto-scroll vers le bas toutes les 500ms
         setInterval(function() {
             window.scrollTo(0, document.body.scrollHeight);
         }, 500);
@@ -107,7 +106,7 @@ if ($schritt === 1 || $schritt === 2) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // MAJ BDD
+            // Mettre à jour le statut dans la BDD
             $newStatus = $schritt;
             $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
             $updateStmt->bind_param("ii", $newStatus, $version_id);

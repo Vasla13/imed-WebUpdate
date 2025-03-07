@@ -19,7 +19,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- Colonne ID masquée -->
+        <!-- Colonne ID supprimée -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -49,22 +49,18 @@ ob_start();
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
-              if (stripos($archivePath, "http") === 0) {
-                  $siteLink = $archivePath;
+              $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
+              if (preg_match($pattern, $archivePath, $matches)) {
+                  $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
+                  $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+                  $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
               } else {
-                  $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
-                  if (preg_match($pattern, $archivePath, $matches)) {
-                      $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
-                      $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
-                      $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
-                  } else {
-                      $siteLink = "#";
-                  }
+                  $siteLink = "#";
               }
           }
       ?>
       <tr>
-        <!-- Colonne ID masquée -->
+        <!-- Colonne ID supprimée -->
         <td><?= htmlspecialchars($row['VERSION']); ?></td>
         <td><?= htmlspecialchars($row['RELEASE_DATE']); ?></td>
         <td>
@@ -109,7 +105,7 @@ ob_start();
     <button class="close-modal" aria-label="Close">&times;</button>
     <h2>Version Hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Choix du mode d'upload -->
+      <!-- Sélection du mode d'upload -->
       <div class="form-group">
         <label>Upload-Modus:</label>
         <div class="toggle-container">
@@ -166,7 +162,7 @@ ob_start();
     }
   });
 
-  // Gestion de l'ouverture/fermeture de la modale
+  // Gérer l'ouverture/fermeture de la modale
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");
