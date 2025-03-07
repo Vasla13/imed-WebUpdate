@@ -131,7 +131,6 @@ if ($schritt === 1 || $schritt === 2) {
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {
          $baseName = basename($extractedDir);
-         // Récupérer l'IP du serveur (du PC) au lieu d'une IP fixe
          $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
          $siteLink = "http://{$server_ip}/{$baseName}/imed-Info/framework.php";
     } else {

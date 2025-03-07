@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Unberechtigter Zugriff.");
 }
 
-// Vérifier rôle admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    die("Nur Administratoren dürfen Dateien hochladen.");
+// Autoriser admin et user
+if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin','user'])) {
+    die("Nur Administratoren und registrierte Benutzer dürfen Dateien hochladen.");
 }
 
 if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
@@ -69,7 +69,7 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
         $stmt->bind_param("ssss", $version, $release_date, $targetFile, $comment);
         if ($stmt->execute()) {
             // Retour
-            $redirectUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php';
+            $redirectUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'user.php';
             header("Location: " . $redirectUrl);
             exit();
         } else {

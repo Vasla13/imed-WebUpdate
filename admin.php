@@ -51,7 +51,7 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien si status=3 en utilisant l'IP dynamique du serveur
+          // Générer le lien si status = 3 avec l'IP dynamique du serveur
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
@@ -114,31 +114,25 @@ ob_start();
 <!-- Fenêtre modale pour "Version Hinzufügen" -->
 <div id="myModal" class="modal">
   <div class="modal-box">
-    <!-- Bouton de fermeture -->
     <button class="close-modal" aria-label="Close">&times;</button>
     <h2>Version Hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Zone de Drag & Drop -->
       <div id="uploadDropZone" class="upload-dropzone">
         <p>Datei hierher ziehen oder klicken</p>
         <input type="file" name="file" id="file" class="dropzone-input">
       </div>
-
       <div class="form-group">
         <label for="version">Version:</label>
         <input type="text" name="version" id="version" required>
       </div>
-
       <div class="form-group">
         <label for="release_date">Veröffentlichungsdatum:</label>
         <input type="date" name="release_date" id="release_date" required>
       </div>
-
       <div class="form-group">
         <label for="comment">Kommentar:</label>
         <textarea name="comment" id="comment" rows="4"></textarea>
       </div>
-
       <div class="form-actions">
         <input type="submit" value="Hochladen" class="btn">
       </div>
@@ -147,7 +141,7 @@ ob_start();
 </div>
 
 <script>
-  // Gérer l'ouverture/fermeture de la modale
+  // Ouverture/Fermeture de la modale
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");
@@ -164,7 +158,7 @@ ob_start();
     }
   });
 
-  // Drag & Drop
+  // Drag & Drop pour l'upload
   const dropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('file');
 

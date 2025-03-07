@@ -15,6 +15,7 @@ ob_start();
     <div class="options">
       <a href="login.php" class="btn"><i class="fas fa-sign-in-alt"></i> Anmelden</a>
       <a href="register.php" class="btn"><i class="fas fa-user-plus"></i> Registrieren</a>
+      <!-- Bouton Gastmodus supprimé -->
     </div>
   </div>
 </div>

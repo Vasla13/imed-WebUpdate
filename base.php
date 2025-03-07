@@ -24,6 +24,9 @@
           <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
             <li><a href="admin.php"><i class="fas fa-user-shield"></i><span>Admin</span></a></li>
           <?php endif; ?>
+          <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'user'): ?>
+            <li><a href="user.php"><i class="fas fa-user"></i><span>User</span></a></li>
+          <?php endif; ?>
         </ul>
       </nav>
       <div class="sidebar-footer">
@@ -44,14 +47,12 @@
         <h1><?php echo isset($header) ? $header : 'Dorner - Update Verwaltung'; ?></h1>
       </header>
       
-      <!-- Aktionsbereich (affiché dès lors qu'un utilisateur est connecté) -->
-      <?php if(isset($_SESSION['user_role'])): ?>
+      <!-- Zone d'actions pour admin et user -->
+      <?php if(isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['admin', 'user'])): ?>
       <div class="action-buttons" style="text-align: left; margin: 20px 0;">
-        <?php if($_SESSION['user_role'] === 'admin'): ?>
           <a href="#" id="openModalBtn" class="btn" style="margin-right: 10px;">
             <i class="fas fa-plus"></i> Version hinzufügen
           </a>
-        <?php endif; ?>
       </div>
       <?php endif; ?>
       
