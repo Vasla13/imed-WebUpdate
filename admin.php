@@ -51,14 +51,15 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien si status=3
+          // Générer le lien si status=3 en utilisant l'IP dynamique du serveur
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
               $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
               if (preg_match($pattern, $archivePath, $matches)) {
                   $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
-                  $siteLink = "http://10.238.36.81/{$extractedFolder}/imed-Info/framework.php?CHECKINSTALL2=1";
+                  $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+                  $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
               } else {
                   $siteLink = "#";
               }

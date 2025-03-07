@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-// Récupérer params
+// Récupérer les paramètres
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -28,7 +28,7 @@ if (!$result || $result->num_rows === 0) {
 $row = $result->fetch_assoc();
 $web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
 
-// Vérifier le fichier
+// Vérifier le fichier pour les étapes 1 et 2
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
@@ -58,7 +58,7 @@ echo "  <link rel='stylesheet' href='style.css'>\n";
 echo "</head>\n";
 echo "<body>\n";
 echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
-echo "<h2>Installation der Version #".htmlspecialchars($version_id)." - Schritt $schritt</h2>\n";
+echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
 echo "<pre style='background:rgba(255,255,255,0.1); border-radius:6px; padding:15px;'>\n";
 ob_flush();
 flush();
@@ -131,17 +131,22 @@ if ($schritt === 1 || $schritt === 2) {
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {
          $baseName = basename($extractedDir);
-         $siteLink = "http://10.238.36.81/{$baseName}/imed-Info/framework.php";
+         // Récupérer l'IP du serveur (du PC) au lieu d'une IP fixe
+         $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+         $siteLink = "http://{$server_ip}/{$baseName}/imed-Info/framework.php";
     } else {
          $siteLink = "#";
     }
-    echo "Die Installation ist abgeschlossen. Sie können nun auf die Webseite zugreifen:";
-    echo "\n\n<a href='$siteLink' class='btn'>$siteLink</a>";
+    echo "</pre>\n";
+    echo "<div class='install-success' style='text-align: center; margin: 20px;'>";
+    echo "<h2>Die Installation ist abgeschlossen.</h2>";
+    echo "<p>Sie können nun auf die Webseite zugreifen:</p>";
+    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>";
+    echo "</div>";
 } else {
     echo "Unbekannter Schritt.";
 }
 
-echo "</pre>\n";
 echo "<p><a href='admin.php' class='btn'>Zurück zur Admin-Seite</a></p>\n";
 echo "</div>\n";
 echo "</body>\n";
