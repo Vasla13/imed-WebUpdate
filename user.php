@@ -19,7 +19,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <th>ID</th>
+        <!-- Colonne ID masquée -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -49,18 +49,22 @@ ob_start();
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
-              $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
-              if (preg_match($pattern, $archivePath, $matches)) {
-                  $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
-                  $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
-                  $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
+              if (stripos($archivePath, "http") === 0) {
+                  $siteLink = $archivePath;
               } else {
-                  $siteLink = "#";
+                  $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
+                  if (preg_match($pattern, $archivePath, $matches)) {
+                      $extractedFolder = "imed-Web_" . $matches[1] . "_gh";
+                      $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+                      $siteLink = "http://{$server_ip}/{$extractedFolder}/imed-Info/framework.php";
+                  } else {
+                      $siteLink = "#";
+                  }
               }
           }
       ?>
       <tr>
-        <td><?= htmlspecialchars($row['ID']); ?></td>
+        <!-- Colonne ID masquée -->
         <td><?= htmlspecialchars($row['VERSION']); ?></td>
         <td><?= htmlspecialchars($row['RELEASE_DATE']); ?></td>
         <td>
@@ -105,10 +109,28 @@ ob_start();
     <button class="close-modal" aria-label="Close">&times;</button>
     <h2>Version Hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Zone de Drag & Drop -->
-      <div id="uploadDropZone" class="upload-dropzone">
-        <p>Datei hierher ziehen oder klicken</p>
-        <input type="file" name="file" id="file" class="dropzone-input">
+      <!-- Choix du mode d'upload -->
+      <div class="form-group">
+        <label>Upload-Modus:</label>
+        <div class="toggle-container">
+          <input type="radio" id="local" name="upload_mode" value="local" checked>
+          <label for="local">Local</label>
+          <input type="radio" id="internet" name="upload_mode" value="internet">
+          <label for="internet">Internet</label>
+        </div>
+      </div>
+      <!-- Section pour upload local -->
+      <div id="localUpload" class="form-group">
+        <label for="file">Datei:</label>
+        <div id="uploadDropZone" class="upload-dropzone">
+          <p>Datei hierher ziehen oder klicken</p>
+          <input type="file" name="file" id="file" class="dropzone-input">
+        </div>
+      </div>
+      <!-- Section pour upload Internet (URL) -->
+      <div id="internetUpload" class="form-group" style="display: none;">
+        <label for="file_url">Datei URL:</label>
+        <input type="text" name="file_url" id="file_url" placeholder="https://example.com/file.zip">
       </div>
       <div class="form-group">
         <label for="version">Version:</label>
@@ -130,7 +152,21 @@ ob_start();
 </div>
 
 <script>
-  // Gérer l'ouverture/fermeture de la modale
+  // Gestion du toggle entre Local et Internet
+  document.getElementById("local").addEventListener("change", function() {
+    if (this.checked) {
+      document.getElementById("localUpload").style.display = "block";
+      document.getElementById("internetUpload").style.display = "none";
+    }
+  });
+  document.getElementById("internet").addEventListener("change", function() {
+    if (this.checked) {
+      document.getElementById("localUpload").style.display = "none";
+      document.getElementById("internetUpload").style.display = "block";
+    }
+  });
+
+  // Gestion de l'ouverture/fermeture de la modale
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");
@@ -147,7 +183,7 @@ ob_start();
     }
   });
 
-  // Drag & Drop
+  // Gestion du Drag & Drop pour le mode local
   const dropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('file');
 
