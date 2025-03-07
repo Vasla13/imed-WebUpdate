@@ -19,7 +19,6 @@
       </div>
       <nav class="sidebar-nav">
         <ul class="sidebar-menu">
-          <!-- Lien vers la page de bienvenue -->
           <li><a href="willkommen.php"><i class="fas fa-home"></i><span>Startseite</span></a></li>
           <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
             <li><a href="admin.php"><i class="fas fa-user-shield"></i><span>Admin</span></a></li>

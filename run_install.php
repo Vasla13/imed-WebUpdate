@@ -3,13 +3,17 @@ session_start();
 require_once 'config.php';
 require_once 'db.php';
 
-// Vérifier l'admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+// Vérifier que l'utilisateur est admin ou user
+if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin', 'user'])) {
     header("Location: login.php");
     exit();
 }
 
-// Récupérer les paramètres
+// Définir la page de retour en fonction du rôle
+$backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
+$backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
+
+// Récupérer params
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -51,7 +55,7 @@ echo "<head>\n";
 echo "  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
     // redirection auto en 5s
-    echo "  <meta http-equiv='refresh' content='5;url=admin.php'>\n";
+    echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
@@ -103,14 +107,14 @@ if ($schritt === 1 || $schritt === 2) {
             $updateStmt->execute();
             
             if ($schritt === 1) {
-                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur Admin-Seite...";
+                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
                 echo "</pre>";
                 echo "<script>
                         setTimeout(function() {
-                            window.location.href = 'admin.php';
+                            window.location.href = '{$backPage}';
                         }, 5000);
                       </script>";
-                echo "<p><a href='admin.php' class='btn'>Sofort zurückkehren</a></p>";
+                echo "<p><a href='{$backPage}' class='btn'>Sofort zurückkehren</a></p>";
                 echo "</div></body></html>";
                 ob_flush();
                 flush();
@@ -146,7 +150,7 @@ if ($schritt === 1 || $schritt === 2) {
     echo "Unbekannter Schritt.";
 }
 
-echo "<p><a href='admin.php' class='btn'>Zurück zur Admin-Seite</a></p>\n";
+echo "<p><a href='{$backPage}' class='btn'>Zurück zur {$backPageText}</a></p>\n";
 echo "</div>\n";
 echo "</body>\n";
 echo "</html>\n";

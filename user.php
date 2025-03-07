@@ -97,6 +97,86 @@ ob_start();
     </tbody>
   </table>
 </div>
+
+<!-- Fenêtre modale pour "Version Hinzufügen" -->
+<div id="myModal" class="modal">
+  <div class="modal-box">
+    <!-- Bouton de fermeture -->
+    <button class="close-modal" aria-label="Close">&times;</button>
+    <h2>Version Hinzufügen</h2>
+    <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
+      <!-- Zone de Drag & Drop -->
+      <div id="uploadDropZone" class="upload-dropzone">
+        <p>Datei hierher ziehen oder klicken</p>
+        <input type="file" name="file" id="file" class="dropzone-input">
+      </div>
+      <div class="form-group">
+        <label for="version">Version:</label>
+        <input type="text" name="version" id="version" required>
+      </div>
+      <div class="form-group">
+        <label for="release_date">Veröffentlichungsdatum:</label>
+        <input type="date" name="release_date" id="release_date" required>
+      </div>
+      <div class="form-group">
+        <label for="comment">Kommentar:</label>
+        <textarea name="comment" id="comment" rows="4"></textarea>
+      </div>
+      <div class="form-actions">
+        <input type="submit" value="Hochladen" class="btn">
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Gérer l'ouverture/fermeture de la modale
+  const modal = document.getElementById("myModal");
+  const openBtn = document.getElementById("openModalBtn");
+  const closeBtn = document.querySelector(".close-modal");
+
+  if (openBtn) {
+    openBtn.addEventListener("click", () => modal.classList.add("active"));
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => modal.classList.remove("active"));
+  }
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("active");
+    }
+  });
+
+  // Drag & Drop
+  const dropZone = document.getElementById('uploadDropZone');
+  const fileInput = document.getElementById('file');
+
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        dropZone.querySelector('p').textContent = e.dataTransfer.files[0].name;
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        dropZone.querySelector('p').textContent = fileInput.files[0].name;
+      }
+    });
+  }
+</script>
+
 <?php
 $content = ob_get_clean();
 include 'base.php';
