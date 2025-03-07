@@ -1,4 +1,30 @@
-/* Reset */
+/***********************************************
+ *               Variables globales            *
+ ***********************************************/
+ :root {
+  /* Couleurs principales (Rouge, Blanc, Gris) */
+  --primary-color: #D32F2F;  /* Rouge vif */
+  --primary-hover: #B71C1C;  /* Rouge plus foncé au survol */
+  --primary-dark: #9A1E1E;   /* Rouge encore plus soutenu */
+
+  --secondary-color: #2E2E2E; /* Gris foncé pour la sidebar */
+  --secondary-hover: #1F1F1F; /* Gris encore plus foncé au survol */
+
+  --accent-color: #f0f0f0;   /* Gris clair (pour traits, bordures, etc.) */
+
+  --text-color: #333;        /* Couleur de texte standard */
+  --white: #fff;
+  --gray-light: #f9f9f9;
+  --gray-lighter: #eee;
+  --gray: #ccc;
+
+  /* Typos */
+  --font-primary: 'Raleway', sans-serif;
+}
+
+/***********************************************
+ *            Reset et style global            *
+ ***********************************************/
 * {
   margin: 0;
   padding: 0;
@@ -6,42 +32,49 @@
 }
 
 body {
-  font-family: 'Raleway', sans-serif;
-  background-color: #f8f8f8;
-  color: #333;
+  font-family: var(--font-primary);
+  background-color: var(--gray-light);
+  color: var(--text-color);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* Layout principal */
+/***********************************************
+ *             Layout principal                *
+ ***********************************************/
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar */
+/***********************************************
+ *                   SIDEBAR                   *
+ ***********************************************/
 .sidebar {
-  width: 250px;
-  background-color: #2c2c2c;
-  color: #fff;
+  width: 240px;
+  background-color: var(--secondary-color);
+  color: var(--white);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .sidebar-logo {
   text-align: center;
   padding: 20px 0;
-  background-color: #d32f2f;
+  background-color: var(--primary-color);
+  box-shadow: inset 0 -3px 10px rgba(0,0,0,0.2);
 }
 
 .sidebar-logo h2 {
   font-size: 24px;
-  font-weight: bold;
-  color: #fff;
+  color: var(--white);
+  margin: 0;
 }
 
 .sidebar-nav {
-  padding: 10px 0;
+  padding: 20px 0;
 }
 
 .sidebar-menu {
@@ -49,175 +82,270 @@ body {
 }
 
 .sidebar-menu li {
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .sidebar-menu li a {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  color: #fff;
+  display: block;
+  padding: 12px 20px;
   text-decoration: none;
-  transition: background-color 0.3s;
+  color: var(--white);
+  transition: background 0.3s, border-left-color 0.3s;
+  border-left: 4px solid transparent;
 }
 
 .sidebar-menu li a:hover,
 .sidebar-menu li a.active {
-  background-color: #b71c1c;
+  background-color: var(--secondary-hover);
+  border-left-color: var(--white);
 }
 
-.sidebar-menu li a i {
-  margin-right: 10px;
-}
-
+/* Footer de la sidebar (bouton Abmelden) */
 .sidebar-footer {
-  text-align: center;
   padding: 20px;
+  text-align: center;
+  background-color: var(--secondary-color);
 }
 
-/* Main content */
+/***********************************************
+ *         Bouton de déconnexion              *
+ ***********************************************/
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--primary-dark); /* Rouge soutenu */
+  color: var(--white);
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-logout i {
+  margin-right: 6px;
+}
+
+.btn-logout:hover {
+  background-color: #7F0D0D; /* Encore un ton plus foncé */
+  transform: scale(1.05);
+}
+
+/***********************************************
+ *               Contenu principal            *
+ ***********************************************/
 .main-content {
   flex: 1;
-  background-color: #fff;
+  background-color: var(--white);
   padding: 20px;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.05);
 }
 
-/* Header */
+/***********************************************
+ *               En-tête (header)             *
+ ***********************************************/
 .main-header {
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 10px;
   margin-bottom: 20px;
+  border-bottom: 3px solid var(--accent-color);
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .main-header h1 {
-  font-size: 28px;
-  color: #333;
+  font-size: 24px;
+  color: var(--text-color);
+  margin: 0;
 }
 
-/* Breadcrumb */
+/* Fil d’Ariane (breadcrumb) */
 .breadcrumb {
-  font-size: 14px;
   margin-bottom: 10px;
+  font-size: 14px;
   color: #757575;
 }
 
-/* Table styling */
+/***********************************************
+ *               Pied de page                  *
+ ***********************************************/
+.main-footer {
+  text-align: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--gray-lighter);
+  margin-top: 20px;
+  font-size: 14px;
+  color: #757575;
+}
+
+/***********************************************
+ *                   TABLE                     *
+ ***********************************************/
 .table-responsive {
-  overflow-x: auto;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden; /* Pour arrondir le "contenant" du tableau */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  font-size: 14px;
+  background-color: var(--white);
 }
 
-table thead {
-  background-color: #d32f2f;
-  color: #fff;
+table thead tr {
+  background-color: var(--primary-color);
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-table th,
-table td {
-  padding: 12px 15px;
+table th, table td {
+  padding: 12px 16px;
   text-align: left;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid var(--gray-lighter);
 }
 
 table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #fafafa;
 }
 
 table tbody tr:hover {
-  background-color: #ffe6e6;
-}
-
-/* Boutons */
-.btn {
-  display: inline-block;
-  padding: 8px 15px;
-  background-color: #d32f2f;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-  font-size: 14px;
+  background-color: #ffe6e6; /* Léger survol rosé */
   cursor: pointer;
 }
 
-.btn:hover {
-  background-color: #b71c1c;
+/* Boutons d’action (ex : Éditer, Supprimer) dans la table */
+.actions .btn {
+  margin: 4px 0;
+  border-radius: 20px;
+  font-size: 13px;
+  padding: 6px 12px;
 }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.download-btn {
-  background-color: #fff;
-  color: #d32f2f;
-  border: 1px solid #d32f2f;
-  border-radius: 4px;
-  padding: 5px 10px;
+/***********************************************
+ *                   BOUTONS                   *
+ ***********************************************/
+.btn {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 10px 20px;
   text-decoration: none;
-  transition: background-color 0.3s;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-size: 14px;
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
+}
+
+/* Bouton de téléchargement */
+.download-btn {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 20px;
+  padding: 6px 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .download-btn:hover {
-  background-color: #d32f2f;
-  color: #fff;
+  background-color: var(--primary-color);
+  color: var(--white);
 }
 
-/* Actions */
-.actions a,
-.actions button {
-  margin-right: 5px;
+/* Zone d'actions */
+.action-buttons {
+  margin-bottom: 20px;
 }
 
-/* Formulaires */
-.form-container,
-.version-form {
+.action-buttons a {
+  margin-right: 10px;
+}
+
+/***********************************************
+ *               FORMULAIRES                  *
+ ***********************************************/
+.form-container {
   max-width: 500px;
   margin: 0 auto;
-  background: #fafafa;
-  border: 1px solid #ddd;
   padding: 20px;
-  border-radius: 8px;
+  border: 1px solid var(--gray-lighter);
+  background-color: #fafafa;
+  border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.form-container h2,
-.version-form h2 {
-  text-align: center;
+.form-container h2 {
   margin-bottom: 20px;
-  color: #d32f2f;
+  color: var(--primary-color);
+  text-align: center;
+  font-size: 22px;
 }
 
-.form-container label,
-.version-form label {
+.form-container label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .form-container input[type="text"],
 .form-container input[type="password"],
 .form-container input[type="date"],
-.form-container textarea,
-.version-form input[type="text"],
-.version-form input[type="date"],
-.version-form textarea {
+.form-container textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--gray);
   border-radius: 4px;
+  transition: border 0.3s;
 }
 
-/* Fenêtres modales */
+.form-container input[type="text"]:focus,
+.form-container input[type="password"]:focus,
+.form-container input[type="date"]:focus,
+.form-container textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.form-container input[type="submit"] {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-container input[type="submit"]:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Messages d'erreur */
+.error {
+  color: var(--primary-dark);
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/***********************************************
+ *                  MODALE                     *
+ ***********************************************/
 .modal {
   position: fixed;
   top: 0;
@@ -225,7 +353,7 @@ table tbody tr:hover {
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.6);
-  display: none;
+  display: none; /* masquée par défaut */
   align-items: center;
   justify-content: center;
   z-index: 1000;
@@ -235,118 +363,300 @@ table tbody tr:hover {
   display: flex;
 }
 
+/* Boîte de la modale */
 .modal-box {
+  position: relative;
   background: #fff;
+  padding: 30px;
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
-  padding: 30px;
-  position: relative;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.modal-box h2 {
-  margin-bottom: 20px;
-  color: #d32f2f;
-  text-align: center;
-}
-
+/* Bouton de fermeture (croix en haut à droite) */
 .close-modal {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 24px;
   color: #333;
   cursor: pointer;
 }
 
-/* Toggle pour le mode d'upload */
-.toggle-container {
+/* Titre de la modale */
+.modal-box h2 {
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  font-size: 22px;
+  text-align: center;
+}
+
+/* Formulaire dans la modale */
+.version-form {
   display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Groupe de champs (label + input) */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/***********************************************
+ *     Boutons radio (Upload local/internet)   *
+ ***********************************************/
+.radio-group {
+  display: flex;
+  gap: 20px;
   align-items: center;
-  margin-bottom: 15px;
 }
 
-.toggle-container input[type="radio"] {
-  margin-right: 5px;
-}
-
-.toggle-container label {
-  margin-right: 15px;
+.radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
+  font-weight: 600;
 }
 
-/* Zone de Drag & Drop */
+.radio-group input[type="radio"] {
+  accent-color: var(--primary-color);
+}
+
+/***********************************************
+ *            Zone de Drag & Drop              *
+ ***********************************************/
 .upload-dropzone {
   border: 2px dashed #ccc;
-  border-radius: 4px;
   padding: 20px;
   text-align: center;
-  transition: border-color 0.3s;
-  cursor: pointer;
-  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
 }
 
 .upload-dropzone.dragover {
-  border-color: #d32f2f;
+  border-color: var(--primary-color);
 }
 
-/* Styles spécifiques pour run_install.php */
-.install-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.install-output {
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  padding: 15px;
-  overflow-y: auto;
-  max-height: 400px;
-  font-family: monospace;
+.upload-dropzone p {
+  margin: 0;
+  color: #666;
   font-size: 14px;
-  color: #333;
-  white-space: pre-wrap;
-  word-wrap: break-word;
 }
 
-.install-success {
-  text-align: center;
-  margin: 20px;
-  padding: 15px;
-  background-color: #e8f5e9;
-  border: 1px solid #c8e6c9;
-  border-radius: 6px;
-  color: #2e7d32;
-  font-weight: bold;
+.dropzone-input {
+  display: none; /* L’input file reste masqué */
 }
 
-/* Footer */
-.main-footer {
-  text-align: center;
-  padding: 10px 0;
-  border-top: 1px solid #ddd;
+/***********************************************
+ *        Bouton d’action (Hochladen)         *
+ ***********************************************/
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions .btn {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-size: 14px;
+}
+
+.form-actions .btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
+}
+
+/***********************************************
+ *          Barre de filtre (index.php)        *
+ ***********************************************/
+.fancy-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fancy-filter-bar .filter-item {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+}
+
+.fancy-filter-bar .filter-item label {
+  margin-right: 5px;
+  font-weight: 600;
+}
+
+.fancy-filter-bar input[type="text"],
+.fancy-filter-bar input[type="date"] {
+  padding: 8px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  width: 100%;
+  transition: border 0.3s;
+}
+
+.fancy-filter-bar input[type="text"]:focus,
+.fancy-filter-bar input[type="date"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+button.fancy-filter-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button.fancy-filter-btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
+}
+
+/***********************************************
+ *      Historique / Changelog (changelog)     *
+ ***********************************************/
+.changelog {
+  padding: 20px;
+  background: var(--gray-light);
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+}
+
+.timeline {
+  border-left: 3px solid var(--primary-color);
+  padding-left: 20px;
   margin-top: 20px;
+}
+
+.timeline-item {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  border: 3px solid var(--white);
+}
+
+.timeline-item .timeline-icon {
+  font-size: 20px;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.timeline-item .timeline-content {
+  background: var(--white);
+  padding: 15px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+}
+
+.timeline-item .timeline-content h3 {
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.timeline-item .timeline-date {
   font-size: 14px;
   color: #757575;
+  margin-bottom: 10px;
 }
 
-/* Responsive */
+/***********************************************
+ *   Section d'accueil (willkommen.php)        *
+ ***********************************************/
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+ background: url('hero-bg.jpg') no-repeat center center/cover; 
+  position: relative;
+}
+
+.home-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+}
+
+.hero-glass {
+  position: relative;
+  background: rgba(255,255,255,0.85);
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.hero-glass h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.hero-glass p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.hero-glass .options a {
+  margin: 0 10px;
+  padding: 12px 25px;
+  border-radius: 25px;
+}
+
+/***********************************************
+ *         Adaptations pour mobiles           *
+ ***********************************************/
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
-    display: none; /* Vous pouvez implémenter un menu burger ici */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
   }
+
+  .sidebar-nav {
+    display: none; /* Possibilité d’afficher un menu burger si besoin */
+  }
+
   .main-content {
     padding: 10px;
   }
