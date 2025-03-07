@@ -59,6 +59,13 @@ if ($schritt === 1) {
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
+// Ajout du script pour auto-scroller
+echo "  <script>
+        // Auto-scroll vers le bas toutes les 500ms
+        setInterval(function() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }, 500);
+      </script>\n";
 echo "</head>\n";
 echo "<body>\n";
 echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
