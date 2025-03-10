@@ -150,11 +150,12 @@ if ($schritt === 1 || $schritt === 2) {
          $siteLink = "#";
     }
     echo "</pre>\n";
-    echo "<div class='install-success' style='text-align: center; margin: 20px;'>";
-    echo "<h2>Die Installation ist abgeschlossen.</h2>";
-    echo "<p>Sie können nun auf die Webseite zugreifen:</p>";
-    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>";
-    echo "</div>";
+    // Affichage de l'étape 3 sans style inline afin d'utiliser le style précédent
+    echo "<div class='install-success'>\n";
+    echo "<h2>Die Installation ist abgeschlossen.</h2>\n";
+    echo "<p>Sie können nun auf die Webseite zugreifen:</p>\n";
+    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>\n";
+    echo "</div>\n";
 } else {
     echo "Unbekannter Schritt.";
 }
