@@ -1,6 +1,5 @@
 <?php
 require_once 'config.php';
-// Session löschen, um einen neutralen Zustand zu erreichen
 session_unset();
 session_destroy();
 
@@ -15,7 +14,6 @@ ob_start();
     <div class="options">
       <a href="login.php" class="btn"><i class="fas fa-sign-in-alt"></i> Anmelden</a>
       <a href="register.php" class="btn"><i class="fas fa-user-plus"></i> Registrieren</a>
-      <!-- Gastmodus-Button entfernt -->
     </div>
   </div>
 </div>

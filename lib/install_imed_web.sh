@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # install_imed_web.sh : Installationsskript für Imed-Web
-# Usage: sh install_imed_web.sh /pfad/zum/archiv.tgz [SCHRITT]
+# Verwendung: sh install_imed_web.sh /pfad/zum/archiv.tgz [SCHRITT]
 #        SCHRITT=1 : Archiv extrahieren
 #        SCHRITT=2 : Ausführung von install.sh im extrahierten Ordner
 #        SCHRITT=3 : Keine Aktion (Webzugriff)
@@ -32,12 +32,10 @@ case "$SCHRITT" in
     ARCHIVE_NAME=$(basename "$WEB_ARCHIV")
     cp "$WEB_ARCHIV" "/imed/prog/new/$ARCHIVE_NAME"
     tar -xzf "/imed/prog/new/$ARCHIVE_NAME" -C /imed/prog/new/
-    # Optional: rm -f "/imed/prog/new/$ARCHIVE_NAME"
     echo "Extraktion abgeschlossen."
     ;;
   2)
     echo "Starte Konfiguration..."
-    # Finde den extrahierten Ordner, der mit "imed-Web_*" beginnt
     EXTRACTED_DIR=$(find /imed/prog/new -maxdepth 1 -type d -name "imed-Web_*" | sort | head -n 1)
     if [ -n "$EXTRACTED_DIR" ]; then
        if [ -f "$EXTRACTED_DIR/install.sh" ]; then

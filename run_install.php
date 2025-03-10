@@ -3,17 +3,14 @@ session_start();
 require_once 'config.php';
 require_once 'db.php';
 
-// Vérifier que l'utilisateur est admin ou user
 if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin', 'user'])) {
     header("Location: login.php");
     exit();
 }
 
-// Définir la page de retour en fonction du rôle
 $backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
-$backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
+$backPageText = ($_SESSION['user_role'] === 'admin') ? 'Administratorseite' : 'Benutzerseite';
 
-// Récupérer les paramètres
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -21,8 +18,7 @@ if ($version_id <= 0) {
     die("Keine Version ausgewählt.");
 }
 
-// Chemin de l'archive
-$stmt = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
+$stmt = $conn->prepare("SELECT DATEIPFAD FROM VERSIONEN WHERE ID = ?");
 $stmt->bind_param("i", $version_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,61 +26,38 @@ if (!$result || $result->num_rows === 0) {
     die("Version nicht in der Datenbank gefunden (ID = $version_id).");
 }
 $row = $result->fetch_assoc();
-$web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
+$web_archiv = $row['DATEIPFAD'];
 
-// Vérifier le fichier pour les étapes 1 et 2
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
 
-// Chemin du script shell
 $script_path = "/imed/prog/imed-WebUpdate/lib/install_imed_web.sh";
-if (!file_exists($script_path)) {
-    die("Installationsskript nicht gefunden: " . htmlspecialchars($script_path));
+if (!file_exists($script_path) || !is_executable($script_path)) {
+    log_error("Installationsskript nicht gefunden oder nicht ausführbar: " . htmlspecialchars($script_path));
+    die("Installationsskript nicht gefunden oder nicht ausführbar.");
 }
 
-// Affichage direct
 header('Content-Type: text/html; charset=utf-8');
 @ini_set('output_buffering','off');
 @ini_set('zlib.output_compression', 0);
 set_time_limit(0);
 
-echo "<!DOCTYPE html>\n";
-echo "<html lang='de'>\n";
-echo "<head>\n";
-echo "  <meta charset='UTF-8'>\n";
+echo "<!DOCTYPE html>\n<html lang='de'>\n<head>\n  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
-    // Redirection automatique en 5s pour l'étape 1
     echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// Script d'auto-scroll ciblant le conteneur .install-container
-echo "  <script>
-        setInterval(function() {
-            var container = document.querySelector('.install-container');
-            if (container) {
-                container.scrollTop = container.scrollHeight;
-            }
-        }, 500);
-      </script>\n";
-echo "</head>\n";
-echo "<body>\n";
-echo "<div class='install-container'>\n";
+echo "</head>\n<body>\n<div class='install-container'>\n";
 echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
-echo "<pre>\n";
-ob_flush();
-flush();
+
+$logFile = __DIR__ . '/logs/install_' . date('Ymd_His') . '.log';
+$output = "";
+$return_code = 1;
 
 if ($schritt === 1 || $schritt === 2) {
-    // Exécuter le script shell
-    $command = sprintf(
-        'sh %s %s %d 2>&1',
-        escapeshellarg($script_path),
-        escapeshellarg($web_archiv),
-        $schritt
-    );
-    
+    $command = sprintf('sh %s %s %d 2>&1', escapeshellarg($script_path), escapeshellarg($web_archiv), $schritt);
     $descriptorspec = [
         1 => ['pipe', 'w'],
         2 => ['pipe', 'w'],
@@ -93,53 +66,42 @@ if ($schritt === 1 || $schritt === 2) {
     
     if (is_resource($process)) {
         while (($line = fgets($pipes[1])) !== false) {
-            echo htmlspecialchars($line);
-            ob_flush();
-            flush();
+            $output .= $line;
         }
         while (($line = fgets($pipes[2])) !== false) {
-            echo htmlspecialchars($line);
-            ob_flush();
-            flush();
+            $output .= $line;
         }
         fclose($pipes[1]);
         fclose($pipes[2]);
-        
         $return_code = proc_close($process);
-        echo "\n---\n";
-        if ($return_code === 0) {
-            echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // Mise à jour du statut dans la BDD
-            $newStatus = $schritt;
-            $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
-            $updateStmt->bind_param("ii", $newStatus, $version_id);
-            $updateStmt->execute();
-            
-            if ($schritt === 1) {
-                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
-                echo "</pre>";
-                echo "<script>
-                        setTimeout(function() {
-                            window.location.href = '{$backPage}';
-                        }, 5000);
-                      </script>";
-                echo "<p><a href='{$backPage}' class='btn'>Sofort zurückkehren</a></p>";
-                echo "</div></body></html>";
-                ob_flush();
-                flush();
-                exit();
-            }
-        } else {
-            echo "Fehler beim Ausführen von Schritt $schritt (Code $return_code).";
+    } else {
+        log_error("Fehler: Prozessstart des Installationsskripts nicht möglich.");
+        $output = "Fehler: Installationsprozess konnte nicht gestartet werden.";
+    }
+    
+    file_put_contents($logFile, $output, FILE_APPEND);
+    
+    if ($return_code === 0) {
+        echo "<p>Schritt $schritt erfolgreich ausgeführt.</p>";
+        $newStatus = $schritt;
+        $updateStmt = $conn->prepare("UPDATE VERSIONEN SET INSTALLATIONSSTATUS = ? WHERE ID = ?");
+        $updateStmt->bind_param("ii", $newStatus, $version_id);
+        $updateStmt->execute();
+        
+        if ($schritt === 1) {
+            echo "<p>Die Installation wurde erfolgreich gestartet. Sie werden in 5 Sekunden weitergeleitet.</p>";
+            echo "<p><a href='{$backPage}' class='btn'>Jetzt zur {$backPageText} zurückkehren</a></p>";
+            echo "</div></body></html>";
+            exit();
         }
     } else {
-        echo "Fehler: Prozessstart des Installationsskripts nicht möglich.";
+        log_error("Installationsfehler in Schritt $schritt, Rückgabecode: $return_code. Log: " . $logFile);
+        echo "<p>Es ist ein Fehler während des Installationsprozesses aufgetreten. Bitte überprüfen Sie die Protokolldatei.</p>";
     }
 } elseif ($schritt === 3) {
-    $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = 3 WHERE ID = ?");
+    $updateStmt = $conn->prepare("UPDATE VERSIONEN SET INSTALLATIONSSTATUS = 3 WHERE ID = ?");
     $updateStmt->bind_param("i", $version_id);
     $updateStmt->execute();
-    // Tenter de trouver le dossier extrait
     $cmd = "find /imed/prog/new -maxdepth 1 -type d -name 'imed-Web_*' | sort | head -n 1";
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {
@@ -149,22 +111,15 @@ if ($schritt === 1 || $schritt === 2) {
     } else {
          $siteLink = "#";
     }
-    echo "</pre>\n";
-    // Affichage de l'étape 3 sans style inline afin d'utiliser le style précédent
     echo "<div class='install-success'>\n";
     echo "<h2>Die Installation ist abgeschlossen.</h2>\n";
     echo "<p>Sie können nun auf die Webseite zugreifen:</p>\n";
     echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>\n";
     echo "</div>\n";
 } else {
-    echo "Unbekannter Schritt.";
+    echo "<p>Unbekannter Schritt.</p>";
 }
 
 echo "<p><a href='{$backPage}' class='btn'>Zurück zur {$backPageText}</a></p>\n";
-echo "</div>\n";
-echo "</body>\n";
-echo "</html>\n";
-
-ob_flush();
-flush();
+echo "</div>\n</body>\n</html>";
 ?>

@@ -24,7 +24,7 @@
             <li><a href="admin.php"><i class="fas fa-user-shield"></i><span>Admin</span></a></li>
           <?php endif; ?>
           <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'user'): ?>
-            <li><a href="user.php"><i class="fas fa-user"></i><span>User</span></a></li>
+            <li><a href="user.php"><i class="fas fa-user"></i><span>Benutzer</span></a></li>
           <?php endif; ?>
         </ul>
       </nav>
@@ -46,7 +46,7 @@
         <h1><?php echo isset($header) ? $header : 'Dorner - Update Verwaltung'; ?></h1>
       </header>
       
-      <!-- Aktionsbereich für Admin und User -->
+      <!-- Gemeinsame Aktion (Modal) für Admin und Benutzer -->
       <?php if(isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['admin', 'user'])): ?>
       <div class="action-buttons" style="text-align: left; margin: 20px 0;">
           <a href="#" id="openModalBtn" class="btn" style="margin-right: 10px;">
