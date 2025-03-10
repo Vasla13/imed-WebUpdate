@@ -3,13 +3,17 @@ session_start();
 require_once 'config.php';
 require_once 'db.php';
 
-// Vérifier l'admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+// Vérifier que l'utilisateur est admin ou user
+if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin', 'user'])) {
     header("Location: login.php");
     exit();
 }
 
-// Récupérer params
+// Définir la page de retour en fonction du rôle
+$backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
+$backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
+
+// Récupérer les paramètres
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -28,7 +32,7 @@ if (!$result || $result->num_rows === 0) {
 $row = $result->fetch_assoc();
 $web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
 
-// Vérifier le fichier
+// Vérifier le fichier pour les étapes 1 et 2
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
@@ -51,14 +55,21 @@ echo "<head>\n";
 echo "  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
     // redirection auto en 5s
-    echo "  <meta http-equiv='refresh' content='5;url=admin.php'>\n";
+    echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
+// On conserve le script d'auto-scroll
+echo "  <script>
+        setInterval(function() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }, 500);
+      </script>\n";
 echo "</head>\n";
 echo "<body>\n";
 echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
-echo "<h2>Installation der Version #".htmlspecialchars($version_id)." - Schritt $schritt</h2>\n";
+echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
+// Ici, on utilise l'ancien style inline pour le bloc <pre>
 echo "<pre style='background:rgba(255,255,255,0.1); border-radius:6px; padding:15px;'>\n";
 ob_flush();
 flush();
@@ -103,14 +114,14 @@ if ($schritt === 1 || $schritt === 2) {
             $updateStmt->execute();
             
             if ($schritt === 1) {
-                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur Admin-Seite...";
+                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
                 echo "</pre>";
                 echo "<script>
                         setTimeout(function() {
-                            window.location.href = 'admin.php';
+                            window.location.href = '{$backPage}';
                         }, 5000);
                       </script>";
-                echo "<p><a href='admin.php' class='btn'>Sofort zurückkehren</a></p>";
+                echo "<p><a href='{$backPage}' class='btn'>Sofort zurückkehren</a></p>";
                 echo "</div></body></html>";
                 ob_flush();
                 flush();
@@ -131,18 +142,22 @@ if ($schritt === 1 || $schritt === 2) {
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {
          $baseName = basename($extractedDir);
-         $siteLink = "http://10.238.36.81/{$baseName}/imed-Info/framework.php";
+         $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+         $siteLink = "http://{$server_ip}/{$baseName}/imed-Info/framework.php";
     } else {
          $siteLink = "#";
     }
-    echo "Die Installation ist abgeschlossen. Sie können nun auf die Webseite zugreifen:";
-    echo "\n\n<a href='$siteLink' class='btn'>$siteLink</a>";
+    echo "</pre>\n";
+    echo "<div class='install-success' style='text-align: center; margin: 20px;'>";
+    echo "<h2>Die Installation ist abgeschlossen.</h2>";
+    echo "<p>Sie können nun auf die Webseite zugreifen:</p>";
+    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>";
+    echo "</div>";
 } else {
     echo "Unbekannter Schritt.";
 }
 
-echo "</pre>\n";
-echo "<p><a href='admin.php' class='btn'>Zurück zur Admin-Seite</a></p>\n";
+echo "<p><a href='{$backPage}' class='btn'>Zurück zur {$backPageText}</a></p>\n";
 echo "</div>\n";
 echo "</body>\n";
 echo "</html>\n";

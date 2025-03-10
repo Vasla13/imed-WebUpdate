@@ -1,14 +1,12 @@
 <?php
 require_once 'config.php';
-
-// Vérifier si l'utilisateur est admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'user') {
     header("Location: login.php");
     exit();
 }
 
-$title = "Admin - Dorner";
-$header = "Administrationsbereich";
+$title = "Benutzer - Dorner";
+$header = "Versionen Übersicht";
 require_once 'db.php';
 
 // Récupérer toutes les versions
@@ -21,22 +19,19 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- La colonne ID est masquée -->
+        <!-- Colonne ID supprimée -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
         <th>Kommentar</th>
         <th>Status</th>
         <th>Link</th>
-        <th>Aktionen</th>
+        <th>Aktion</th>
       </tr>
     </thead>
     <tbody>
       <?php while ($row = $result->fetch_assoc()):
-          // Récupération du statut (0 si non défini)
           $status = isset($row['installation_status']) ? (int)$row['installation_status'] : 0;
-
-          // Déterminer le bouton/nextStep selon le statut
           if ($status === 0) {
               $nextStep = 1;
               $btnText = "Extraktion starten";
@@ -51,7 +46,6 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien si status=3 avec l'IP dynamique du serveur
           $siteLink = "";
           if ($status === 3) {
               $archivePath = $row['DATEIEN'];
@@ -87,13 +81,6 @@ ob_start();
         </td>
         <td>
           <div class="actions">
-            <a href="edit_version.php?id=<?= $row['ID']; ?>" class="btn">
-              <i class="fas fa-edit"></i> Bearbeiten
-            </a>
-            <a href="delete_version.php?id=<?= $row['ID']; ?>" class="btn"
-               onclick="return confirm('Möchten Sie diese Version wirklich löschen?')">
-               <i class="fas fa-trash-alt"></i> Löschen
-            </a>
             <?php if ($status < 3): ?>
                <a href="run_install.php?version_id=<?= $row['ID']; ?>&step=<?= $nextStep; ?>" class="btn">
                  <i class="fas fa-play"></i> <?= $btnText; ?>
