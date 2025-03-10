@@ -13,16 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (strtolower($username) === "admin") {
         $error = "Der Benutzername 'admin' ist reserviert.";
     } else {
+        // Passwort hashen
         $hashed = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-        $rolle = 'user';
-        $stmt = $conn->prepare("INSERT INTO BENUTZER (BENUTZERNAME, PASSWORT, ROLLE) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $hashed, $rolle);
+        $role = 'user';
+        $stmt = $conn->prepare("INSERT INTO USERS (USERNAME, PASSWORD, ROLE) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $hashed, $role);
         if($stmt->execute()) {
             header("Location: login.php");
             exit();
         } else {
             $error = "Fehler bei der Kontoerstellung.";
-            log_error("Registrierungsfehler: " . $stmt->error);
         }
     }
 }
@@ -31,7 +31,7 @@ ob_start();
 <div class="form-container">
   <h2>Registrierung</h2>
   <?php if($error): ?>
-    <p class="error"><?= htmlspecialchars($error) ?></p>
+    <p class="error"><?= $error ?></p>
   <?php endif; ?>
   <form action="" method="post">
     <label for="username">Benutzername:</label>

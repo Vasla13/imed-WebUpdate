@@ -10,7 +10,8 @@ require_once 'db.php';
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
 
-    $stmtSelect = $conn->prepare("SELECT DATEIPFAD FROM VERSIONEN WHERE ID = ?");
+    // 1) Archivpfad aus der Tabelle VERSIONS abrufen
+    $stmtSelect = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
     $stmtSelect->bind_param("i", $id);
     $stmtSelect->execute();
     $resSelect = $stmtSelect->get_result();
@@ -18,16 +19,16 @@ if (isset($_GET['id'])) {
         die("Version nicht gefunden (ID: $id)");
     }
     $row = $resSelect->fetch_assoc();
-    $filePath = $row['DATEIPFAD'];
+    $archivePath = $row['DATEIEN'];
 
-    if (!empty($filePath) && file_exists($filePath)) {
-        if (!unlink($filePath)) {
-            log_error("Fehler beim Löschen der Datei: " . $filePath);
-        }
+    // 2) Archiv löschen
+    if (!empty($archivePath) && file_exists($archivePath)) {
+        unlink($archivePath);
     }
 
+    // 3) Extrahiertes Verzeichnis in /imed/prog/new löschen
     $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
-    if (preg_match($pattern, $filePath, $matches)) {
+    if (preg_match($pattern, $archivePath, $matches)) {
         $extractedDirName = "imed-Web_" . $matches[1] . "_gh";
         $extractedDirPath = "/imed/prog/new/" . $extractedDirName;
         if (is_dir($extractedDirPath)) {
@@ -35,7 +36,8 @@ if (isset($_GET['id'])) {
         }
     }
 
-    $stmtDelete = $conn->prepare("DELETE FROM VERSIONEN WHERE ID = ?");
+    // 4) Zeile aus der Tabelle löschen
+    $stmtDelete = $conn->prepare("DELETE FROM VERSIONS WHERE ID = ?");
     $stmtDelete->bind_param("i", $id);
     if ($stmtDelete->execute()) {
         header("Location: admin.php");

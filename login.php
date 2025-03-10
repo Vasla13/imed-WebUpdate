@@ -9,30 +9,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM BENUTZER WHERE BENUTZERNAME = ?");
+    $stmt = $conn->prepare("SELECT * FROM USERS WHERE USERNAME = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
-        if (password_verify($password, $user['PASSWORT'])) {
-            session_regenerate_id(true);
-            if ($user['ROLLE'] === 'admin') {
+        if ($user['ROLE'] === 'admin') {
+            if (password_verify($password, $user['PASSWORD'])) {
                 $_SESSION['user_role'] = 'admin';
-                $_SESSION['username'] = $user['BENUTZERNAME'];
+                $_SESSION['username'] = $user['USERNAME'];
                 header("Location: admin.php");
                 exit();
             } else {
-                $_SESSION['user_role'] = 'user';
-                $_SESSION['username'] = $user['BENUTZERNAME'];
-                header("Location: user.php");
-                exit();
+                $error = "Falsches Passwort (Admin).";
             }
         } else {
-            $error = "Ungültige Anmeldedaten.";
+            if (password_verify($password, $user['PASSWORD'])) {
+                $_SESSION['user_role'] = 'user';
+                $_SESSION['username'] = $user['USERNAME'];
+                header("Location: user.php");
+                exit();
+            } else {
+                $error = "Falsches Passwort.";
+            }
         }
     } else {
-        $error = "Ungültige Anmeldedaten.";
+        $error = "Benutzer nicht gefunden.";
     }
 }
 ob_start();
@@ -40,7 +43,7 @@ ob_start();
 <div class="form-container">
   <h2>Anmeldung</h2>
   <?php if($error): ?>
-    <p class="error"><?= htmlspecialchars($error) ?></p>
+    <p class="error"><?= $error ?></p>
   <?php endif; ?>
   <form action="" method="post">
     <label for="username">Benutzername:</label>
