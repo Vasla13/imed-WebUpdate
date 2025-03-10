@@ -3,17 +3,17 @@ session_start();
 require_once 'config.php';
 require_once 'db.php';
 
-// Überprüfen, ob der Benutzer admin oder user ist
+// Vérifier que l'utilisateur est admin ou user
 if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin', 'user'])) {
     header("Location: login.php");
     exit();
 }
 
-// Die Rückkehrseite basierend auf der Benutzerrolle festlegen
+// Définir la page de retour en fonction du rôle
 $backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
 $backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
 
-// Parameter abrufen
+// Récupérer les paramètres
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -21,7 +21,7 @@ if ($version_id <= 0) {
     die("Keine Version ausgewählt.");
 }
 
-// Pfad zum Archiv
+// Chemin de l'archive
 $stmt = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
 $stmt->bind_param("i", $version_id);
 $stmt->execute();
@@ -30,20 +30,20 @@ if (!$result || $result->num_rows === 0) {
     die("Version nicht in der Datenbank gefunden (ID = $version_id).");
 }
 $row = $result->fetch_assoc();
-$web_archiv = $row['DATEIEN']; // Vollständiger Pfad zum Archiv
+$web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
 
-// Überprüfe die Datei für die Schritte 1 und 2
+// Vérifier le fichier pour les étapes 1 et 2
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
 
-// Pfad zum Shell-Skript
+// Chemin du script shell
 $script_path = "/imed/prog/imed-WebUpdate/lib/install_imed_web.sh";
 if (!file_exists($script_path)) {
     die("Installationsskript nicht gefunden: " . htmlspecialchars($script_path));
 }
 
-// Direkte Ausgabe
+// Affichage direct
 header('Content-Type: text/html; charset=utf-8');
 @ini_set('output_buffering','off');
 @ini_set('zlib.output_compression', 0);
@@ -54,12 +54,12 @@ echo "<html lang='de'>\n";
 echo "<head>\n";
 echo "  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
-    // Automatische Weiterleitung in 5 Sekunden für Schritt 1
+    // Redirection automatique en 5s pour l'étape 1
     echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// Auto-Scroll-Skript für den Container .install-container
+// Script d'auto-scroll ciblant le conteneur .install-container
 echo "  <script>
         setInterval(function() {
             var container = document.querySelector('.install-container');
@@ -77,7 +77,7 @@ ob_flush();
 flush();
 
 if ($schritt === 1 || $schritt === 2) {
-    // Führe das Shell-Skript aus
+    // Exécuter le script shell
     $command = sprintf(
         'sh %s %s %d 2>&1',
         escapeshellarg($script_path),
@@ -109,7 +109,7 @@ if ($schritt === 1 || $schritt === 2) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // Aktualisierung des Status in der Datenbank
+            // Mise à jour du statut dans la BDD
             $newStatus = $schritt;
             $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
             $updateStmt->bind_param("ii", $newStatus, $version_id);
@@ -139,7 +139,7 @@ if ($schritt === 1 || $schritt === 2) {
     $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = 3 WHERE ID = ?");
     $updateStmt->bind_param("i", $version_id);
     $updateStmt->execute();
-    // Versuche, das extrahierte Verzeichnis zu finden
+    // Tenter de trouver le dossier extrait
     $cmd = "find /imed/prog/new -maxdepth 1 -type d -name 'imed-Web_*' | sort | head -n 1";
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {
@@ -150,7 +150,7 @@ if ($schritt === 1 || $schritt === 2) {
          $siteLink = "#";
     }
     echo "</pre>\n";
-    // Anzeige von Schritt 3 ohne Inline-Stil, um den bestehenden Stil zu verwenden
+    // Affichage de l'étape 3 sans style inline afin d'utiliser le style précédent
     echo "<div class='install-success'>\n";
     echo "<h2>Die Installation ist abgeschlossen.</h2>\n";
     echo "<p>Sie können nun auf die Webseite zugreifen:</p>\n";

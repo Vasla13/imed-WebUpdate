@@ -55,4 +55,13 @@
       </div>
       <?php endif; ?>
       
-      <section class="content"
+      <section class="content">
+        <?php echo $content; ?>
+      </section>
+      <footer class="main-footer">
+        <p>&copy; <?php echo date('Y'); ?> Dorner - Update Verwaltung</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

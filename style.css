@@ -1,23 +1,23 @@
 /* =========================
-   CSS-Variablen
+   VARIABLES CSS
    ========================= */
    :root {
-    --primary: #d32f2f;           /* Knallrot */
-    --primary-dark: #b71c1c;      /* Dunkelrot */
-    --secondary: #ffffff;         /* Weißer Text */
-    --sidebar-bg: #2e2e2e;        /* Hintergrund der Seitenleiste */
+    --primary: #d32f2f;           /* Rouge vif */
+    --primary-dark: #b71c1c;      /* Rouge foncé */
+    --secondary: #ffffff;         /* Texte blanc */
+    --sidebar-bg: #2e2e2e;        /* Fond de la barre latérale */
     --sidebar-text: #fff;
-    --body-bg: #f5f5f5;           /* Allgemeiner Hintergrund */
+    --body-bg: #f5f5f5;           /* Fond général */
     --text-color: #333;
     --border-color: #e0e0e0;
     --light-bg: #fafafa;
     --accent: #757575;
-    --transition-speed: 0.3s;     /* Standard-Übergangsdauer */
+    --transition-speed: 0.3s;     /* Durée de transition standard */
     --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
   
   /* =========================
-     Basis-Reset
+     RESET DE BASE
      ========================= */
   * {
     margin: 0;
@@ -33,7 +33,7 @@
   }
   
   /* =========================
-     Hauptlayout
+     LAYOUT PRINCIPAL
      ========================= */
   .layout {
     display: flex;
@@ -42,7 +42,7 @@
   }
   
   /* =========================
-     Seitenleiste (Sidebar)
+     BARRE LATÉRALE (SIDEBAR)
      ========================= */
   .sidebar {
     width: 250px;
@@ -101,7 +101,7 @@
   }
   
   /* =========================
-     Hauptinhalt
+     CONTENU PRINCIPAL
      ========================= */
   .main-content {
     flex: 1;
@@ -113,7 +113,7 @@
   }
   
   /* =========================
-     Hauptüberschrift
+     EN-TÊTE PRINCIPALE
      ========================= */
   .main-header {
     margin-bottom: 20px;
@@ -139,7 +139,7 @@
   }
   
   /* =========================
-     Navigationspfad (Breadcrumb)
+     FIL D’ARIANE
      ========================= */
   .breadcrumb {
     margin-bottom: 10px;
@@ -148,7 +148,7 @@
   }
   
   /* =========================
-     Fußzeile
+     PIED DE PAGE
      ========================= */
   .main-footer {
     text-align: center;
@@ -160,7 +160,7 @@
   }
   
   /* =========================
-     Tabellen
+     TABLEAUX
      ========================= */
   .table-responsive {
     overflow-x: auto;
@@ -213,7 +213,7 @@
   }
   
   /* =========================
-     Schaltflächen
+     BOUTONS
      ========================= */
   .btn {
     display: inline-block;
@@ -237,6 +237,7 @@
     box-shadow: var(--box-shadow);
   }
   
+  /* Le bouton de déconnexion adopte désormais le même style */
   .btn-logout {
     display: inline-block;
     background-color: var(--primary);
@@ -259,9 +260,7 @@
     box-shadow: var(--box-shadow);
   }
   
-  /* =========================
-     Download-Schaltfläche
-     ========================= */
+  /* Bouton de téléchargement */
   .download-btn {
     background-color: #fff;
     color: var(--primary);
@@ -278,7 +277,7 @@
   }
   
   /* =========================
-     Aktionsbereich
+     ZONE D’ACTIONS
      ========================= */
   .action-buttons {
     margin-bottom: 20px;
@@ -292,7 +291,7 @@
   }
   
   /* =========================
-     Formulare
+     FORMULAIRES
      ========================= */
   .form-container {
     max-width: 500px;
@@ -344,7 +343,7 @@
     width: 100%;
   }
   
-  /* Fehlermeldungen */
+  /* Messages d'erreur */
   .error {
     color: var(--primary);
     margin-bottom: 15px;
@@ -357,7 +356,7 @@
   }
   
   /* =========================
-     Modal – Version hinzufügen
+     MODALE – AJOUT D'UNE VERSION
      ========================= */
   .modal {
     position: fixed;
@@ -478,7 +477,7 @@
   }
   
   /* =========================
-     Upload-Bereich (Drag & Drop)
+     ZONE D'UPLOAD (Drag & Drop)
      ========================= */
   .upload-dropzone {
     border: 2px dashed #ccc;
@@ -495,7 +494,7 @@
   }
   
   /* =========================
-     Filterleiste
+     BARRE DE FILTRE
      ========================= */
   .fancy-filter-bar {
     display: flex;
@@ -525,12 +524,15 @@
   }
   
   /* =========================
-     Status-Badges
+     BADGES DE STATUT
      ========================= */
+  /* Pour une cellule de statut avec la classe "status-cell", on masque le chiffre original
+     et on affiche un badge descriptif via le pseudo-élément ::before.
+     Assure-toi de mettre la classe et l'attribut data-status dans ton HTML. */
   .status-cell {
     text-align: center;
     font-weight: bold;
-    color: transparent;
+    color: transparent; /* masque le chiffre */
     position: relative;
   }
   
@@ -546,25 +548,26 @@
     white-space: nowrap;
   }
   
+  /* Personnalisation en fonction de la valeur du data-status */
   .status-cell[data-status="0"]::before {
     background-color: #f44336;
-    content: "Nicht installiert";
+    content: "Non installé";
   }
   .status-cell[data-status="1"]::before {
     background-color: #ff9800;
-    content: "Extraktion";
+    content: "Extraction";
   }
   .status-cell[data-status="2"]::before {
     background-color: #2196f3;
-    content: "Konfiguration";
+    content: "Configuration";
   }
   .status-cell[data-status="3"]::before {
     background-color: #4caf50;
-    content: "Abgeschlossen";
+    content: "Terminé";
   }
   
   /* =========================
-     Startseite (ohne Bild)
+     SECTION D’ACCUEIL (SANS IMAGE)
      ========================= */
   .home-container {
     display: flex;
@@ -601,7 +604,7 @@
   }
   
   /* =========================
-     Mobile Anpassungen
+     ADAPTATIONS POUR MOBILES
      ========================= */
   @media (max-width: 768px) {
     .layout {
@@ -622,7 +625,7 @@
   }
   
   /* =========================
-     Stile für die Installation (run_install.php)
+     STYLE POUR L'INSTALLATION (run_install.php)
      ========================= */
   .install-container {
     max-width: 1000px;
@@ -663,4 +666,3 @@
     border-radius: 8px;
     color: #2e7d32;
   }
-  
