@@ -1,21 +1,21 @@
 /* =========================
-   VARIABLES CSS
+   CSS VARIABLEN
    ========================= */
    :root {
-    --primary: #d32f2f;           /* Rouge vif */
-    --primary-dark: #b71c1c;      /* Rouge plus foncé */
-    --sidebar-bg: #2e2e2e;        /* Gris foncé (sidebar) */
+    --primary: #d32f2f;           /* Leuchtendes Rot */
+    --primary-dark: #b71c1c;      /* Dunkleres Rot */
+    --sidebar-bg: #2e2e2e;        /* Dunkelgrau (Seitenleiste) */
     --sidebar-text: #fff;
-    --body-bg: #f5f5f5;           /* Fond gris très clair */
+    --body-bg: #f5f5f5;           /* Sehr hellgrauer Hintergrund */
     --text-color: #333;
     --border-color: #e0e0e0;
     --light-bg: #fafafa;
     --accent: #757575;
-    --transition-speed: 0.3s;     /* Durée de transition standard */
+    --transition-speed: 0.3s;     /* Standard Übergangsdauer */
   }
   
   /* =========================
-     RESET DE BASE
+     BASIS-RESET
      ========================= */
   * {
     margin: 0;
@@ -31,21 +31,21 @@
   }
   
   /* =========================
-     LAYOUT PRINCIPAL
+     HAUPTLAYOUT
      ========================= */
   .layout {
     display: flex;
     min-height: 100vh;
-    /* Pour donner un petit effet radial en arrière-plan */
+    /* Subtiler radialer Effekt im Hintergrund */
     background: radial-gradient(circle at top left, #f7f7f7, var(--body-bg));
   }
   
   /* =========================
-     SIDEBAR
+     SEITENLEISTE
      ========================= */
   .sidebar {
     width: 250px;
-    /* Dégradé vertical subtil */
+    /* Subtiler vertikaler Verlauf */
     background: linear-gradient(180deg, var(--sidebar-bg) 0%, #1f1f1f 100%);
     color: var(--sidebar-text);
     display: flex;
@@ -91,7 +91,7 @@
   .sidebar-menu li a:hover,
   .sidebar-menu li a.active {
     background-color: var(--primary-dark);
-    padding-left: 30px; /* petit effet slide */
+    padding-left: 30px; /* kleiner Slide-Effekt */
   }
   
   .sidebar-footer {
@@ -101,7 +101,7 @@
   }
   
   /* =========================
-     CONTENU PRINCIPAL
+     HAUPTINHALT
      ========================= */
   .main-content {
     flex: 1;
@@ -109,12 +109,12 @@
     padding: 20px;
     position: relative;
     z-index: 1;
-    /* Légère ombre pour séparer le contenu de la sidebar */
+    /* Leichter Schatten zur Abgrenzung von der Seitenleiste */
     box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.05);
   }
   
   /* =========================
-     EN-TÊTE PRINCIPALE
+     HAUPTKOPF
      ========================= */
   .main-header {
     margin-bottom: 20px;
@@ -129,7 +129,7 @@
     z-index: 1;
   }
   
-  /* Petite barre décorative (pseudo-élément) */
+  /* Kleine dekorative Leiste (Pseudo-Element) */
   .main-header::before {
     content: "";
     position: absolute;
@@ -142,7 +142,7 @@
   }
   
   /* =========================
-     FIL D’ARIANE
+     BROTBREADCRUMB
      ========================= */
   .breadcrumb {
     margin-bottom: 10px;
@@ -151,7 +151,7 @@
   }
   
   /* =========================
-     PIED DE PAGE
+     FUSSZEILE
      ========================= */
   .main-footer {
     text-align: center;
@@ -163,7 +163,7 @@
   }
   
   /* =========================
-     TABLEAUX
+     TABELLEN
      ========================= */
   .table-responsive {
     overflow-x: auto;
@@ -176,13 +176,13 @@
     background-color: #fff;
     border-radius: 6px;
     overflow: hidden;
-    /* Ombrage plus appuyé pour le tableau */
+    /* Deutlicher Schatten für die Tabelle */
     box-shadow: 0 3px 6px rgba(0,0,0,0.1), 0 6px 12px rgba(0,0,0,0.05);
-    animation: fadeInUp 0.5s ease; /* Animation d’apparition */
+    animation: fadeInUp 0.5s ease; /* Einblende-Animation */
   }
   
   table thead tr {
-    /* Dégradé horizontal dans l’entête */
+    /* Horizontaler Verlauf im Kopfbereich */
     background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
   }
@@ -203,10 +203,10 @@
   }
   
   table tbody tr:hover td {
-    background-color: #ffe6e6; /* Accent rouge très léger */
+    background-color: #ffe6e6; /* Sehr leichter roter Akzent */
   }
   
-  /* Animation simple du tableau au chargement */
+  /* Einfache Animation für die Tabelle beim Laden */
   @keyframes fadeInUp {
     0% {
       opacity: 0;
@@ -219,7 +219,7 @@
   }
   
   /* =========================
-     BOUTONS
+     BUTTONS
      ========================= */
   .btn {
     display: inline-block;
@@ -244,7 +244,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   }
   
-  /* Bouton de déconnexion personnalisé */
+  /* Angepasster Abmelde-Button */
   .btn-logout {
     background-color: #ff4d4d;
     margin-top: 10px;
@@ -256,7 +256,7 @@
     box-shadow: 0 4px 10px rgba(255,0,0,0.2);
   }
   
-  /* Bouton de téléchargement */
+  /* Download-Button */
   .download-btn {
     background-color: #fff;
     color: var(--primary);
@@ -273,7 +273,7 @@
   }
   
   /* =========================
-     ZONE D’ACTIONS
+     AKTIONSBEREICH
      ========================= */
   .action-buttons {
     margin-bottom: 20px;
@@ -287,7 +287,7 @@
   }
   
   /* =========================
-     FORMULAIRES
+     FORMULARE
      ========================= */
   .form-container {
     max-width: 500px;
@@ -307,7 +307,7 @@
     position: relative;
   }
   
-  /* Soulignement décoratif sous le titre */
+  /* Dekorative Unterstreichung unter dem Titel */
   .form-container h2::after {
     content: "";
     position: absolute;
@@ -341,21 +341,21 @@
     width: 100%;
   }
   
-  /* Messages d'erreur */
+  /* Fehlermeldungen */
   .error {
     color: var(--primary);
     margin-bottom: 15px;
     text-align: center;
   }
   
-  /* Animation fadeIn */
+  /* Einblende-Animation */
   @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
   
   /* =========================
-     MODALE
+     MODALES FENSTER
      ========================= */
   .modal {
     position: fixed;
@@ -405,7 +405,7 @@
     color: var(--primary);
   }
   
-  /* Animation au moment de l’ouverture de la modale */
+  /* Animation beim Öffnen des modalen Fensters */
   @keyframes scaleIn {
     0% {
       transform: scale(0.8);
@@ -417,7 +417,7 @@
     }
   }
   
-  /* Zone de Drag & Drop pour l'upload */
+  /* Drag & Drop Bereich für den Upload */
   .upload-dropzone {
     border: 2px dashed #ccc;
     padding: 20px;
@@ -433,7 +433,7 @@
   }
   
   /* =========================
-     BARRE DE FILTRE
+     FILTERLEISTE
      ========================= */
   .fancy-filter-bar {
     display: flex;
@@ -463,7 +463,7 @@
   }
   
   /* =========================
-     HISTORIQUE / CHANGELOG
+     CHANGELOG / VERSIONSHISTORIE
      ========================= */
   .changelog {
     padding: 20px;
@@ -521,7 +521,7 @@
   }
   
   /* =========================
-     SECTION D’ACCUEIL
+     STARTSEITE
      ========================= */
   .home-container {
     display: flex;
@@ -558,7 +558,7 @@
   }
   
   /* =========================
-     ADAPTATIONS POUR MOBILES
+     MOBILE-ANPASSUNGEN
      ========================= */
   @media (max-width: 768px) {
     .layout {
@@ -571,12 +571,12 @@
       align-items: center;
     }
     .sidebar-nav {
-      display: none; /* Optionnel : à transformer en menu burger */
+      display: none; /* Optional: in ein Burger-Menü umwandeln */
     }
     .main-content {
       padding: 10px;
     }
   }
   
-  /* Fin du style plus créatif */
+  /* Ende des kreativen Stils */
   

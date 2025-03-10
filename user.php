@@ -6,10 +6,10 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'user') {
 }
 
 $title = "Benutzer - Dorner";
-$header = "Versionen Übersicht";
+$header = "Übersicht der Versionen";
 require_once 'db.php';
 
-// Récupérer toutes les versions
+// Alle Versionen abrufen
 $sql = "SELECT * FROM VERSIONS";
 $result = $conn->query($sql);
 
@@ -19,7 +19,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- Colonne ID supprimée -->
+        <!-- ID-Spalte weggelassen -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -60,7 +60,7 @@ ob_start();
           }
       ?>
       <tr>
-        <!-- Colonne ID supprimée -->
+        <!-- ID-Spalte weggelassen -->
         <td><?= htmlspecialchars($row['VERSION']); ?></td>
         <td><?= htmlspecialchars($row['RELEASE_DATE']); ?></td>
         <td>
@@ -98,14 +98,14 @@ ob_start();
   </table>
 </div>
 
-<!-- Fenêtre modale pour "Version Hinzufügen" -->
+<!-- Modales Fenster für "Version hinzufügen" -->
 <div id="myModal" class="modal">
   <div class="modal-box">
-    <!-- Bouton de fermeture -->
+    <!-- Schließen-Button -->
     <button class="close-modal" aria-label="Close">&times;</button>
-    <h2>Version Hinzufügen</h2>
+    <h2>Version hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Sélection du mode d'upload -->
+      <!-- Auswahl des Upload-Modus -->
       <div class="form-group">
         <label>Upload-Modus:</label>
         <div class="toggle-container">
@@ -115,7 +115,7 @@ ob_start();
           <label for="internet">Internet</label>
         </div>
       </div>
-      <!-- Section pour upload local -->
+      <!-- Bereich für lokalen Upload -->
       <div id="localUpload" class="form-group">
         <label for="file">Datei:</label>
         <div id="uploadDropZone" class="upload-dropzone">
@@ -123,7 +123,7 @@ ob_start();
           <input type="file" name="file" id="file" class="dropzone-input">
         </div>
       </div>
-      <!-- Section pour upload Internet (URL) -->
+      <!-- Bereich für Internet-Upload (URL) -->
       <div id="internetUpload" class="form-group" style="display: none;">
         <label for="file_url">Datei URL:</label>
         <input type="text" name="file_url" id="file_url" placeholder="https://example.com/file.zip">
@@ -148,7 +148,7 @@ ob_start();
 </div>
 
 <script>
-  // Gestion du toggle entre Local et Internet
+  // Umschaltung zwischen Local und Internet
   document.getElementById("local").addEventListener("change", function() {
     if (this.checked) {
       document.getElementById("localUpload").style.display = "block";
@@ -162,7 +162,7 @@ ob_start();
     }
   });
 
-  // Gérer l'ouverture/fermeture de la modale
+  // Öffnen/Schließen des modalen Fensters
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");
@@ -179,7 +179,7 @@ ob_start();
     }
   });
 
-  // Gestion du Drag & Drop pour le mode local
+  // Drag & Drop für den lokalen Upload
   const dropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('file');
 

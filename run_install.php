@@ -3,17 +3,17 @@ session_start();
 require_once 'config.php';
 require_once 'db.php';
 
-// Vérifier que l'utilisateur est admin ou user
+// Überprüfen, ob der Benutzer Admin oder User ist
 if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin', 'user'])) {
     header("Location: login.php");
     exit();
 }
 
-// Définir la page de retour en fonction du rôle
+// Rückseite festlegen basierend auf der Rolle
 $backPage = ($_SESSION['user_role'] === 'admin') ? 'admin.php' : 'user.php';
 $backPageText = ($_SESSION['user_role'] === 'admin') ? 'Admin-Seite' : 'User-Seite';
 
-// Récupérer les paramètres
+// Parameter abrufen
 $version_id = isset($_GET['version_id']) ? (int)$_GET['version_id'] : 0;
 $schritt = isset($_GET['step']) ? (int)$_GET['step'] : 0;
 
@@ -21,7 +21,7 @@ if ($version_id <= 0) {
     die("Keine Version ausgewählt.");
 }
 
-// Chemin de l'archive
+// Pfad zum Archiv
 $stmt = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
 $stmt->bind_param("i", $version_id);
 $stmt->execute();
@@ -30,20 +30,20 @@ if (!$result || $result->num_rows === 0) {
     die("Version nicht in der Datenbank gefunden (ID = $version_id).");
 }
 $row = $result->fetch_assoc();
-$web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
+$web_archiv = $row['DATEIEN']; // Vollständiger Pfad zum Archiv
 
-// Vérifier le fichier pour les étapes 1 et 2
+// Datei für Schritte 1 und 2 überprüfen
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
 
-// Chemin du script shell
+// Pfad zum Shell-Skript
 $script_path = "/imed/prog/imed-WebUpdate/lib/install_imed_web.sh";
 if (!file_exists($script_path)) {
     die("Installationsskript nicht gefunden: " . htmlspecialchars($script_path));
 }
 
-// Affichage direct
+// Direkte Ausgabe
 header('Content-Type: text/html; charset=utf-8');
 @ini_set('output_buffering','off');
 @ini_set('zlib.output_compression', 0);
@@ -54,12 +54,12 @@ echo "<html lang='de'>\n";
 echo "<head>\n";
 echo "  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
-    // redirection auto en 5s
+    // Automatische Weiterleitung in 5 Sekunden
     echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// On conserve le script d'auto-scroll
+// Auto-Scroll-Skript beibehalten
 echo "  <script>
         setInterval(function() {
             window.scrollTo(0, document.body.scrollHeight);
@@ -69,13 +69,13 @@ echo "</head>\n";
 echo "<body>\n";
 echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
 echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
-// Ici, on utilise l'ancien style inline pour le bloc <pre>
+// Altmodischer Inline-Stil für den <pre>-Block
 echo "<pre style='background:rgba(255,255,255,0.1); border-radius:6px; padding:15px;'>\n";
 ob_flush();
 flush();
 
 if ($schritt === 1 || $schritt === 2) {
-    // Exécuter le script shell
+    // Shell-Skript ausführen
     $command = sprintf(
         'sh %s %s %d 2>&1',
         escapeshellarg($script_path),
@@ -107,7 +107,7 @@ if ($schritt === 1 || $schritt === 2) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // MAJ BDD
+            // Datenbank aktualisieren
             $newStatus = $schritt;
             $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
             $updateStmt->bind_param("ii", $newStatus, $version_id);
@@ -137,7 +137,7 @@ if ($schritt === 1 || $schritt === 2) {
     $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = 3 WHERE ID = ?");
     $updateStmt->bind_param("i", $version_id);
     $updateStmt->execute();
-    // Tenter de trouver le dossier extrait
+    // Versuchen, das extrahierte Verzeichnis zu finden
     $cmd = "find /imed/prog/new -maxdepth 1 -type d -name 'imed-Web_*' | sort | head -n 1";
     $extractedDir = trim(shell_exec($cmd));
     if ($extractedDir) {

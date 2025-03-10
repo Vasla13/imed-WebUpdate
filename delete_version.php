@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         unlink($archivePath);
     }
 
-    // 3) Dossier extrait dans /imed/prog/new
+    // 3) Extrahiertes Verzeichnis in /imed/prog/new löschen
     $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
     if (preg_match($pattern, $archivePath, $matches)) {
         $extractedDirName = "imed-Web_" . $matches[1] . "_gh";
@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
         }
     }
 
-    // 4) Supprimer la ligne de la table
+    // 4) Zeile aus der Tabelle löschen
     $stmtDelete = $conn->prepare("DELETE FROM VERSIONS WHERE ID = ?");
     $stmtDelete->bind_param("i", $id);
     if ($stmtDelete->execute()) {

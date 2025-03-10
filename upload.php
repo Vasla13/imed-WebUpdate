@@ -2,7 +2,7 @@
 require_once 'config.php';
 require_once 'db.php';
 
-// Fonction pour convertir des notations comme "5G" en bytes
+// Funktion zur Umrechnung von Angaben wie "5G" in Bytes
 function return_bytes($val) {
     $val = trim($val);
     $last = strtolower($val[strlen($val) - 1]);
@@ -15,7 +15,7 @@ function return_bytes($val) {
     return $val;
 }
 
-// Vérifier la taille POST
+// Überprüfen der POST-Datenmenge
 $postMaxSize = return_bytes(ini_get('post_max_size'));
 if (isset($_SERVER['CONTENT_LENGTH']) && (int)$_SERVER['CONTENT_LENGTH'] > $postMaxSize) {
     die("Fehler: Die gesamte Datenmenge überschreitet das post_max_size-Limit (" . ini_get('post_max_size') . ").");
@@ -25,33 +25,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Unberechtigter Zugriff.");
 }
 
-// Autoriser admin et user
+// Nur Administratoren und registrierte Benutzer dürfen Dateien hochladen
 if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin','user'])) {
     die("Nur Administratoren und registrierte Benutzer dürfen Dateien hochladen.");
 }
 
-// Déterminer le mode d'upload
+// Upload-Modus bestimmen
 $upload_mode = $_POST['upload_mode'] ?? 'local';
 
 if ($upload_mode === 'internet') {
-    // Mode Internet : récupérer et valider l'URL
+    // Internet-Modus: URL abrufen und validieren
     $file_url = trim($_POST['file_url'] ?? '');
     if (empty($file_url) || !filter_var($file_url, FILTER_VALIDATE_URL)) {
         die("Fehler: Ungültige oder fehlende URL.");
     }
-    // On stocke l'URL directement dans la base de données
+    // Die URL wird direkt in der Datenbank gespeichert
     $targetFile = $file_url;
 } else {
-    // Mode local : traiter le fichier uploadé
+    // Lokaler Modus: Hochgeladene Datei verarbeiten
     if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
 
-        // Limite 5GB
+        // Limit 5GB
         $maxSize = 5368709120; // 5 GB
         if ($_FILES['file']['size'] > $maxSize) {
             die("Fehler: Die Datei ist größer als 5 GB.");
         }
 
-        // Extensions autorisées
+        // Erlaubte Dateiendungen
         $allowed_extensions = ['zip', 'tar', 'gz', 'tgz', 'rar'];
         $originalFileName = basename($_FILES['file']['name']);
         $file_extension = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
@@ -59,13 +59,13 @@ if ($upload_mode === 'internet') {
             die("Fehler: Ungültiger Dateityp.");
         }
 
-        // Dossier d'upload
+        // Upload-Verzeichnis
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
 
-        // Nom de fichier unique
+        // Eindeutiger Dateiname
         $newFileName = time() . "_" . $originalFileName;
         $targetFile = $targetDir . $newFileName;
 
@@ -73,7 +73,7 @@ if ($upload_mode === 'internet') {
             die("Fehler beim Verschieben der Datei.");
         }
     } else {
-        // Gérer les erreurs d'upload
+        // Fehler beim Upload behandeln
         $error_code = isset($_FILES['file']) ? $_FILES['file']['error'] : "Keine Datei hochgeladen";
         $error_message = "";
         switch ($error_code) {
@@ -96,19 +96,19 @@ if ($upload_mode === 'internet') {
     }
 }
 
-// Champs du formulaire
+// Formularfelder
 $version = $_POST['version'] ?? '';
 $release_date = $_POST['release_date'] ?? '';
 $comment = $_POST['comment'] ?? '';
 
-// Insertion dans la base de données
+// Einfügen in die Datenbank
 $stmt = $conn->prepare("INSERT INTO VERSIONS (VERSION, RELEASE_DATE, DATEIEN, COMMENT) VALUES (?, ?, ?, ?)");
 if (!$stmt) {
     die("Fehler bei der Vorbereitung: " . $conn->error);
 }
 $stmt->bind_param("ssss", $version, $release_date, $targetFile, $comment);
 if ($stmt->execute()) {
-    // Redirection vers la page précédente (admin.php ou user.php)
+    // Weiterleitung zur vorherigen Seite (admin.php oder user.php)
     $redirectUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'user.php';
     header("Location: " . $redirectUrl);
     exit();
