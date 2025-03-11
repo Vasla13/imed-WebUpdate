@@ -1,50 +1,50 @@
 /* =========================
-   VARIABLES CSS
+   CSS-Variablen
    ========================= */
    :root {
-    --primary: #d32f2f;           /* Rouge vif */
-    --primary-dark: #b71c1c;       /* Rouge foncé */
-    --secondary: #ffffff;         /* Texte blanc */
-    --sidebar-bg: #2e2e2e;         /* Fond de la barre latérale */
+    --primary: #d32f2f;           /* Knallrot */
+    --primary-dark: #b71c1c;       /* Dunkelrot */
+    --secondary: #ffffff;         /* Weiß (Text) */
+    --sidebar-bg: #2e2e2e;         /* Hintergrund der Seitenleiste */
     --sidebar-text: #fff;
-    --body-bg: #f5f5f5;            /* Fond général */
+    --body-bg: #f5f5f5;            /* Allgemeiner Hintergrund */
     --text-color: #333;
     --border-color: #e0e0e0;
     --light-bg: #fafafa;
     --accent: #757575;
-    --transition-speed: 0.3s;      /* Durée de transition standard */
+    --transition-speed: 0.3s;      /* Standard-Übergangsdauer */
     --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* =========================
-   RESET DE BASE
-   ========================= */
-* {
+  }
+  
+  /* =========================
+     Basis-Reset
+     ========================= */
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
+  }
+  
+  body {
     font-family: 'Raleway', sans-serif;
     background-color: var(--body-bg);
     color: var(--text-color);
     line-height: 1.6;
-}
-
-/* =========================
-   LAYOUT PRINCIPAL
-   ========================= */
-.layout {
+  }
+  
+  /* =========================
+     Hauptlayout
+     ========================= */
+  .layout {
     display: flex;
     min-height: 100vh;
     background: radial-gradient(circle at top left, #f7f7f7, var(--body-bg));
-}
-
-/* =========================
-   BARRE LATÉRALE (SIDEBAR)
-   ========================= */
-.sidebar {
+  }
+  
+  /* =========================
+     Seitenleiste (Sidebar)
+     ========================= */
+  .sidebar {
     width: 250px;
     background: linear-gradient(180deg, var(--sidebar-bg) 0%, #1f1f1f 100%);
     color: var(--sidebar-text);
@@ -53,81 +53,81 @@ body {
     justify-content: space-between;
     position: relative;
     z-index: 2;
-}
-
-.sidebar-logo {
+  }
+  
+  .sidebar-logo {
     text-align: center;
     padding: 20px 0;
     background-color: var(--primary);
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.sidebar-logo h2 {
+  }
+  
+  .sidebar-logo h2 {
     font-size: 24px;
     color: var(--sidebar-text);
     letter-spacing: 1px;
-}
-
-.sidebar-nav {
+  }
+  
+  .sidebar-nav {
     padding: 20px 0;
-}
-
-.sidebar-menu {
+  }
+  
+  .sidebar-menu {
     list-style: none;
-}
-
-.sidebar-menu li {
+  }
+  
+  .sidebar-menu li {
     margin: 10px 0;
-}
-
-.sidebar-menu li a {
+  }
+  
+  .sidebar-menu li a {
     text-decoration: none;
     color: var(--sidebar-text);
     display: block;
     padding: 10px 20px;
     transition: background-color var(--transition-speed) ease, padding-left 0.2s;
-}
-
-.sidebar-menu li a:hover,
-.sidebar-menu li a.active {
+  }
+  
+  .sidebar-menu li a:hover,
+  .sidebar-menu li a.active {
     background-color: var(--primary-dark);
     padding-left: 30px;
-}
-
-.sidebar-footer {
+  }
+  
+  .sidebar-footer {
     padding: 20px;
     text-align: center;
     border-top: 1px solid #444;
-}
-
-/* =========================
-   CONTENU PRINCIPAL
-   ========================= */
-.main-content {
+  }
+  
+  /* =========================
+     Hauptinhalt
+     ========================= */
+  .main-content {
     flex: 1;
     background-color: #fff;
     padding: 20px;
     position: relative;
     z-index: 1;
     box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.05);
-}
-
-/* =========================
-   EN-TÊTE PRINCIPALE
-   ========================= */
-.main-header {
+  }
+  
+  /* =========================
+     Kopfzeile
+     ========================= */
+  .main-header {
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border-color);
     position: relative;
-}
-.main-header h1 {
+  }
+  .main-header h1 {
     font-size: 28px;
     color: var(--text-color);
     position: relative;
     z-index: 1;
-}
-.main-header::before {
+  }
+  .main-header::before {
     content: "";
     position: absolute;
     bottom: 0;
@@ -136,37 +136,37 @@ body {
     height: 2px;
     background-color: var(--primary);
     border-radius: 2px;
-}
-
-/* =========================
-   FIL D’ARIANE
-   ========================= */
-.breadcrumb {
+  }
+  
+  /* =========================
+     Breadcrumb (Navigationspfad)
+     ========================= */
+  .breadcrumb {
     margin-bottom: 10px;
     font-size: 14px;
     color: var(--accent);
-}
-
-/* =========================
-   PIED DE PAGE
-   ========================= */
-.main-footer {
+  }
+  
+  /* =========================
+     Fußzeile
+     ========================= */
+  .main-footer {
     text-align: center;
     padding: 10px 0;
     border-top: 1px solid var(--border-color);
     margin-top: 20px;
     font-size: 14px;
     color: var(--accent);
-}
-
-/* =========================
-   TABLEAUX
-   ========================= */
-.table-responsive {
+  }
+  
+  /* =========================
+     Tabellen
+     ========================= */
+  .table-responsive {
     overflow-x: auto;
-}
-
-table {
+  }
+  
+  table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
@@ -175,47 +175,47 @@ table {
     overflow: hidden;
     box-shadow: 0 3px 6px rgba(0,0,0,0.1), 0 6px 12px rgba(0,0,0,0.05);
     animation: fadeInUp 0.5s ease;
-}
-
-table thead tr {
+  }
+  
+  table thead tr {
     background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
-}
-
-table th, table td {
+  }
+  
+  table th, table td {
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-color);
     text-align: left;
     transition: background-color var(--transition-speed) ease;
-}
-
-table tbody tr:last-child td {
+  }
+  
+  table tbody tr:last-child td {
     border-bottom: none;
-}
-
-table tbody tr:nth-child(even) {
+  }
+  
+  table tbody tr:nth-child(even) {
     background-color: var(--light-bg);
-}
-
-table tbody tr:hover td {
+  }
+  
+  table tbody tr:hover td {
     background-color: #ffe6e6;
-}
-
-@keyframes fadeInUp {
+  }
+  
+  @keyframes fadeInUp {
     0% {
-        opacity: 0;
-        transform: translateY(15px);
+      opacity: 0;
+      transform: translateY(15px);
     }
     100% {
-        opacity: 1;
-        transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
     }
-}
-
-/* =========================
-   BOUTONS
-   ========================= */
-.btn {
+  }
+  
+  /* =========================
+     Buttons
+     ========================= */
+  .btn {
     display: inline-block;
     background-color: var(--primary);
     color: var(--secondary);
@@ -229,15 +229,15 @@ table tbody tr:hover td {
                 box-shadow var(--transition-speed) ease;
     font-size: 14px;
     margin: 5px 0;
-}
-
-.btn:hover {
+  }
+  
+  .btn:hover {
     background-color: var(--primary-dark);
     transform: translateY(-2px) scale(1.02);
     box-shadow: var(--box-shadow);
-}
-
-.btn-logout {
+  }
+  
+  .btn-logout {
     display: inline-block;
     background-color: var(--primary);
     color: var(--secondary);
@@ -251,16 +251,16 @@ table tbody tr:hover td {
                 box-shadow var(--transition-speed) ease;
     font-size: 14px;
     margin: 5px 0;
-}
-
-.btn-logout:hover {
+  }
+  
+  .btn-logout:hover {
     background-color: var(--primary-dark);
     transform: translateY(-2px) scale(1.02);
     box-shadow: var(--box-shadow);
-}
-
-/* Bouton de téléchargement */
-.download-btn {
+  }
+  
+  /* Download-Button */
+  .download-btn {
     background-color: #fff;
     color: var(--primary);
     border: 1px solid var(--primary);
@@ -268,31 +268,31 @@ table tbody tr:hover td {
     padding: 5px 10px;
     text-decoration: none;
     transition: all var(--transition-speed) ease;
-}
-.download-btn:hover {
+  }
+  .download-btn:hover {
     background-color: var(--primary);
     color: #fff;
     transform: translateY(-1px);
-}
-
-/* =========================
-   ZONE D’ACTIONS
-   ========================= */
-.action-buttons {
+  }
+  
+  /* =========================
+     Aktionsbereich
+     ========================= */
+  .action-buttons {
     margin-bottom: 20px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-}
-
-.action-buttons a {
+  }
+  
+  .action-buttons a {
     margin-right: 10px;
-}
-
-/* =========================
-   FORMULAIRES
-   ========================= */
-.form-container {
+  }
+  
+  /* =========================
+     Formulare
+     ========================= */
+  .form-container {
     max-width: 500px;
     margin: 0 auto;
     padding: 20px;
@@ -301,15 +301,15 @@ table tbody tr:hover td {
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     animation: fadeIn 0.4s ease;
-}
-
-.form-container h2 {
+  }
+  
+  .form-container h2 {
     margin-bottom: 20px;
     color: var(--primary);
     text-align: center;
     position: relative;
-}
-.form-container h2::after {
+  }
+  .form-container h2::after {
     content: "";
     position: absolute;
     bottom: -5px;
@@ -319,45 +319,45 @@ table tbody tr:hover td {
     height: 3px;
     background-color: var(--primary);
     border-radius: 2px;
-}
-
-.form-container label {
+  }
+  
+  .form-container label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-}
-
-.form-container input[type="text"],
-.form-container input[type="password"],
-.form-container input[type="date"],
-.form-container textarea {
+  }
+  
+  .form-container input[type="text"],
+  .form-container input[type="password"],
+  .form-container input[type="date"],
+  .form-container textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-.form-container input[type="submit"] {
+  }
+  
+  .form-container input[type="submit"] {
     width: 100%;
-}
-
-/* Messages d'erreur */
-.error {
+  }
+  
+  /* Fehlermeldungen */
+  .error {
     color: var(--primary);
     margin-bottom: 15px;
     text-align: center;
-}
-
-@keyframes fadeIn {
+  }
+  
+  @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
-}
-
-/* =========================
-   MODALE – AJOUT D'UNE VERSION
-   ========================= */
-.modal {
+  }
+  
+  /* =========================
+     Modal – Version hinzufügen
+     ========================= */
+  .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -370,14 +370,14 @@ table tbody tr:hover td {
     z-index: 1000;
     opacity: 0;
     transition: opacity var(--transition-speed) ease;
-}
-
-.modal.active {
+  }
+  
+  .modal.active {
     display: flex;
     opacity: 1;
-}
-
-.modal-box {
+  }
+  
+  .modal-box {
     background: #fff;
     padding: 40px 30px;
     border-radius: 10px;
@@ -386,52 +386,52 @@ table tbody tr:hover td {
     position: relative;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     animation: scaleIn 0.4s ease;
-}
-
-.modal-box h2 {
+  }
+  
+  .modal-box h2 {
     margin-bottom: 25px;
     color: var(--primary);
     text-align: center;
     font-size: 24px;
     position: relative;
-}
-
-.modal-box .form-group {
+  }
+  
+  .modal-box .form-group {
     margin-bottom: 20px;
-}
-
-.modal-box label {
+  }
+  
+  .modal-box label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
     color: var(--text-color);
-}
-
-.modal-box input[type="text"],
-.modal-box input[type="date"],
-.modal-box input[type="password"],
-.modal-box textarea {
+  }
+  
+  .modal-box input[type="text"],
+  .modal-box input[type="date"],
+  .modal-box input[type="password"],
+  .modal-box textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
     transition: border-color var(--transition-speed) ease;
-}
-
-.modal-box input[type="text"]:focus,
-.modal-box input[type="date"]:focus,
-.modal-box input[type="password"]:focus,
-.modal-box textarea:focus {
+  }
+  
+  .modal-box input[type="text"]:focus,
+  .modal-box input[type="date"]:focus,
+  .modal-box input[type="password"]:focus,
+  .modal-box textarea:focus {
     border-color: var(--primary);
     outline: none;
-}
-
-.modal-box .form-actions {
+  }
+  
+  .modal-box .form-actions {
     text-align: center;
-}
-
-.modal-box .form-actions input[type="submit"] {
+  }
+  
+  .modal-box .form-actions input[type="submit"] {
     width: auto;
     padding: 10px 30px;
     background-color: var(--primary);
@@ -441,14 +441,14 @@ table tbody tr:hover td {
     cursor: pointer;
     transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
     font-size: 16px;
-}
-
-.modal-box .form-actions input[type="submit"]:hover {
+  }
+  
+  .modal-box .form-actions input[type="submit"]:hover {
     background-color: var(--primary-dark);
     transform: translateY(-2px);
-}
-
-.close-modal {
+  }
+  
+  .close-modal {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -458,81 +458,81 @@ table tbody tr:hover td {
     cursor: pointer;
     color: var(--primary);
     transition: color var(--transition-speed) ease;
-}
-
-.close-modal:hover {
+  }
+  
+  .close-modal:hover {
     color: var(--primary-dark);
-}
-
-@keyframes scaleIn {
+  }
+  
+  @keyframes scaleIn {
     0% {
-        transform: scale(0.8);
-        opacity: 0;
+      transform: scale(0.8);
+      opacity: 0;
     }
     100% {
-        transform: scale(1);
-        opacity: 1;
+      transform: scale(1);
+      opacity: 1;
     }
-}
-
-/* =========================
-   ZONE D'UPLOAD (Drag & Drop)
-   ========================= */
-.upload-dropzone {
+  }
+  
+  /* =========================
+     Upload-Bereich (Drag & Drop)
+     ========================= */
+  .upload-dropzone {
     border: 2px dashed #ccc;
     padding: 20px;
     text-align: center;
     margin-bottom: 15px;
     border-radius: 4px;
     transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease;
-}
-
-.upload-dropzone.dragover {
+  }
+  
+  .upload-dropzone.dragover {
     border-color: var(--primary);
     background-color: #ffe6e6;
-}
-
-/* =========================
-   BARRE DE FILTRE
-   ========================= */
-.fancy-filter-bar {
+  }
+  
+  /* =========================
+     Filterleiste
+     ========================= */
+  .fancy-filter-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
     margin-bottom: 20px;
-}
-
-.fancy-filter-bar .filter-item {
+  }
+  
+  .fancy-filter-bar .filter-item {
     flex: 1;
     min-width: 150px;
     display: flex;
     align-items: center;
-}
-
-.fancy-filter-bar .filter-item label {
+  }
+  
+  .fancy-filter-bar .filter-item label {
     margin-right: 5px;
-}
-
-.fancy-filter-bar input[type="text"],
-.fancy-filter-bar input[type="date"] {
+  }
+  
+  .fancy-filter-bar input[type="text"],
+  .fancy-filter-bar input[type="date"] {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 100%;
-}
-
-/* =========================
-   BADGES DE STATUT
-   ========================= */
-.status-cell {
+  }
+  
+  /* =========================
+     Status-Badges
+     ========================= */
+  .status-cell {
     text-align: center;
     font-weight: bold;
     color: transparent;
     position: relative;
-}
-
-.status-cell::before {
+  }
+  
+  .status-cell::before {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -542,87 +542,87 @@ table tbody tr:hover td {
     font-size: 12px;
     color: #fff;
     white-space: nowrap;
-}
-
-.status-cell[data-status="0"]::before {
+  }
+  
+  .status-cell[data-status="0"]::before {
     background-color: #f44336;
-    content: "Non installé";
-}
-.status-cell[data-status="1"]::before {
+    content: "Nicht installiert";
+  }
+  .status-cell[data-status="1"]::before {
     background-color: #ff9800;
-    content: "Extraction";
-}
-.status-cell[data-status="2"]::before {
+    content: "Extraktion";
+  }
+  .status-cell[data-status="2"]::before {
     background-color: #2196f3;
-    content: "Configuration";
-}
-.status-cell[data-status="3"]::before {
+    content: "Konfiguration";
+  }
+  .status-cell[data-status="3"]::before {
     background-color: #4caf50;
-    content: "Terminé";
-}
-
-/* =========================
-   SECTION D’ACCUEIL (SANS IMAGE)
-   ========================= */
-.home-container {
+    content: "Fertig";
+  }
+  
+  /* =========================
+     Startseitenbereich (ohne Bild)
+     ========================= */
+  .home-container {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 80vh;
     background: linear-gradient(135deg, #ffffff, #f5f5f5);
-}
-
-.hero-glass {
+  }
+  
+  .hero-glass {
     background: rgba(255,255,255,0.8);
     border-radius: 8px;
     padding: 40px;
     text-align: center;
     max-width: 600px;
     animation: fadeIn 0.6s ease;
-}
-
-.hero-glass h1 {
+  }
+  
+  .hero-glass h1 {
     font-size: 36px;
     margin-bottom: 20px;
     color: var(--primary);
     position: relative;
-}
-
-.hero-glass p {
+  }
+  
+  .hero-glass p {
     font-size: 18px;
     margin-bottom: 20px;
     color: var(--text-color);
-}
-
-.hero-glass .options a {
+  }
+  
+  .hero-glass .options a {
     margin: 0 10px;
-}
-
-/* =========================
-   ADAPTATIONS POUR MOBILES
-   ========================= */
-@media (max-width: 768px) {
+  }
+  
+  /* =========================
+     Anpassungen für mobile Geräte
+     ========================= */
+  @media (max-width: 768px) {
     .layout {
-        flex-direction: column;
+      flex-direction: column;
     }
     .sidebar {
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
     .sidebar-nav {
-        display: none;
+      display: none;
     }
     .main-content {
-        padding: 10px;
+      padding: 10px;
     }
-}
-
-/* =========================
-   STYLE POUR L'INSTALLATION (run_install.php)
-   ========================= */
-.install-container {
+  }
+  
+  /* =========================
+     Stil für die Installation (run_install.php)
+     ========================= */
+  .install-container {
     max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
@@ -630,16 +630,16 @@ table tbody tr:hover td {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.install-container h2 {
+  }
+  
+  .install-container h2 {
     text-align: center;
     margin-bottom: 20px;
     color: var(--primary);
     font-size: 24px;
-}
-
-.install-container pre {
+  }
+  
+  .install-container pre {
     background: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -650,9 +650,9 @@ table tbody tr:hover td {
     max-height: 400px;
     overflow-y: auto;
     white-space: pre-wrap;
-}
-
-.install-success {
+  }
+  
+  .install-success {
     text-align: center;
     margin: 20px;
     padding: 20px;
@@ -660,4 +660,5 @@ table tbody tr:hover td {
     border: 1px solid #c8e6c9;
     border-radius: 8px;
     color: #2e7d32;
-}
+  }
+  

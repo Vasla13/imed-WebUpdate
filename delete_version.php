@@ -10,7 +10,7 @@ require_once 'db.php';
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
 
-    // Récupérer le chemin de l'archive et le dossier extrait depuis la BDD
+    // Den Archivpfad und den extrahierten Ordner aus der Datenbank abrufen
     $stmtSelect = $conn->prepare("SELECT DATEIEN, extracted_folder FROM VERSIONS WHERE ID = ?");
     $stmtSelect->bind_param("i", $id);
     $stmtSelect->execute();
@@ -22,19 +22,19 @@ if (isset($_GET['id'])) {
     $archivePath = $row['DATEIEN'];
     $extractedFolder = $row['extracted_folder'];
 
-    // Supprimer le fichier d’archive dans le dossier uploads (s'il existe)
+    // Lösche die Archivdatei im Ordner uploads (falls vorhanden)
     if (!empty($archivePath) && file_exists($archivePath)) {
         unlink($archivePath);
     }
     
-    // Supprimer l’archive copiée dans /imed/prog/new (si elle existe)
+    // Lösche das in /imed/prog/new kopierte Archiv (falls vorhanden)
     $archiveBaseName = basename($archivePath);
     $copiedArchivePath = "/imed/prog/new/" . $archiveBaseName;
     if (file_exists($copiedArchivePath)) {
         unlink($copiedArchivePath);
     }
 
-    // Supprimer le dossier extrait complet basé sur extracted_folder
+    // Lösche den kompletten extrahierten Ordner basierend auf extracted_folder
     if (!empty($extractedFolder)) {
         $extractedDirPath = "/imed/prog/new/" . $extractedFolder;
         if (is_dir($extractedDirPath)) {
@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
         }
     }
 
-    // Supprimer l'entrée dans la table VERSIONS
+    // Lösche den Eintrag in der Tabelle VERSIONS
     $stmtDelete = $conn->prepare("DELETE FROM VERSIONS WHERE ID = ?");
     $stmtDelete->bind_param("i", $id);
     if ($stmtDelete->execute()) {

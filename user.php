@@ -9,7 +9,7 @@ $title = "Benutzer - Dorner";
 $header = "Übersicht der Versionen";
 require_once 'db.php';
 
-// Récupérer toutes les versions depuis la BDD
+// Alle Versionen aus der Datenbank abrufen
 $sql = "SELECT * FROM VERSIONS";
 $result = $conn->query($sql);
 
@@ -19,7 +19,7 @@ ob_start();
   <table>
     <thead>
       <tr>
-        <!-- La colonne ID est masquée -->
+        <!-- Die ID-Spalte wird ausgeblendet -->
         <th>Version</th>
         <th>Veröffentlichungsdatum</th>
         <th>Datei</th>
@@ -46,7 +46,7 @@ ob_start();
               $btnText = "Installation abgeschlossen";
           }
           
-          // Générer le lien vers le site installé via extracted_folder
+          // Link zur installierten Seite über extracted_folder generieren
           if ($status === 3 && !empty($row['extracted_folder'])) {
               $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
               $siteLink = "http://{$server_ip}/install/" . $row['extracted_folder'] . "/imed-Info/framework.php";
@@ -63,7 +63,7 @@ ob_start();
           }
       ?>
       <tr>
-        <!-- Affichage sans la colonne ID -->
+        <!-- Anzeige ohne ID-Spalte -->
         <td><?= htmlspecialchars($row['VERSION']); ?></td>
         <td><?= htmlspecialchars($row['RELEASE_DATE']); ?></td>
         <td>
@@ -101,24 +101,24 @@ ob_start();
   </table>
 </div>
 
-<!-- Modal pour "Version hinzufügen" -->
+<!-- Modal zum "Version hinzufügen" -->
 <div id="myModal" class="modal">
   <div class="modal-box">
-    <!-- Bouton de fermeture -->
+    <!-- Schließbutton -->
     <button class="close-modal" aria-label="Close">&times;</button>
     <h2>Version hinzufügen</h2>
     <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data" class="version-form">
-      <!-- Sélection du mode d'upload -->
+      <!-- Auswahl des Upload-Modus -->
       <div class="form-group">
         <label>Upload-Modus:</label>
         <div class="toggle-container">
           <input type="radio" id="local" name="upload_mode" value="local" checked>
-          <label for="local">Local</label>
+          <label for="local">Lokal</label>
           <input type="radio" id="internet" name="upload_mode" value="internet">
           <label for="internet">Internet</label>
         </div>
       </div>
-      <!-- Zone pour upload local -->
+      <!-- Bereich für lokalen Upload -->
       <div id="localUpload" class="form-group">
         <label for="file">Datei:</label>
         <div id="uploadDropZone" class="upload-dropzone">
@@ -126,9 +126,9 @@ ob_start();
           <input type="file" name="file" id="file" class="dropzone-input">
         </div>
       </div>
-      <!-- Zone pour upload par URL -->
+      <!-- Bereich für Upload per URL -->
       <div id="internetUpload" class="form-group" style="display: none;">
-        <label for="file_url">Datei URL:</label>
+        <label for="file_url">Datei-URL:</label>
         <input type="text" name="file_url" id="file_url" placeholder="https://example.com/file.zip">
       </div>
       <div class="form-group">
@@ -151,7 +151,7 @@ ob_start();
 </div>
 
 <script>
-  // Gestion du changement de mode d'upload
+  // Verwaltung des Wechsels des Upload-Modus
   document.getElementById("local").addEventListener("change", function() {
     if (this.checked) {
       document.getElementById("localUpload").style.display = "block";
@@ -165,7 +165,7 @@ ob_start();
     }
   });
 
-  // Gestion de l'ouverture/fermeture du modal
+  // Verwaltung des Öffnens/Schließens des Modals
   const modal = document.getElementById("myModal");
   const openBtn = document.getElementById("openModalBtn");
   const closeBtn = document.querySelector(".close-modal");
@@ -182,7 +182,7 @@ ob_start();
     }
   });
 
-  // Gestion du Drag & Drop pour l'upload local
+  // Verwaltung von Drag & Drop für den lokalen Upload
   const dropZone = document.getElementById('uploadDropZone');
   const fileInput = document.getElementById('file');
 

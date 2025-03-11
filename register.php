@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // Le nom "admin" est réservé
+    // Der Benutzername "admin" ist reserviert
     if (strtolower($username) === "admin") {
         $error = "Der Benutzername 'admin' ist reserviert.";
     } else {
-        // Hasher le mot de passe
+        // Passwort hashen
         $hashed = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
         $role = 'user';
         $stmt = $conn->prepare("INSERT INTO USERS (USERNAME, PASSWORD, ROLE) VALUES (?, ?, ?)");

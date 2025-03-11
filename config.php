@@ -1,5 +1,5 @@
 <?php
-// config.php: Configuration centrale et gestion des sessions
+// config.php: Zentrale Konfiguration und Sitzungsverwaltung
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

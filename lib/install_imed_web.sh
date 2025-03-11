@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # install_imed_web.sh : Installationsskript für Imed-Web
-# Usage: sh install_imed_web.sh /pfad/zum/archiv.tgz [SCHRITT] [TARGET_CONTAINER]
+# Nutzung: sh install_imed_web.sh /pfad/zum/archiv.tgz [SCHRITT] [TARGET_CONTAINER]
 #        SCHRITT=1 : Archiv extrahieren
 #        SCHRITT=2 : Ausführung von install.sh im extrahierten Ordner
 #        SCHRITT=3 : Keine Aktion (Webzugriff)
@@ -30,10 +30,10 @@ echo "Zielcontainer: $TARGET_CONTAINER"
 case "$SCHRITT" in
   1)
     echo "Starte Extraktion..."
-    # Copier l'archive dans le container (optionnel)
+    # Kopiere das Archiv in den Zielcontainer (optional)
     ARCHIVE_NAME=$(basename "$WEB_ARCHIV")
     cp "$WEB_ARCHIV" "$TARGET_CONTAINER/$ARCHIVE_NAME"
-    # Extraire dans le dossier conteneur sans renommer le dossier extrait
+    # Archiv im Zielcontainer entpacken, ohne den Ordner umzubenennen
     tar -xzf "$TARGET_CONTAINER/$ARCHIVE_NAME" -C "$TARGET_CONTAINER"
     echo "Extraktion abgeschlossen."
     ;;
@@ -42,7 +42,7 @@ case "$SCHRITT" in
     if [ -d "$TARGET_CONTAINER" ]; then
          cd "$TARGET_CONTAINER" || exit 1
          if [ -f install.sh ]; then
-              echo "Führe install.sh aus in $TARGET_CONTAINER..."
+              echo "Führe install.sh in $TARGET_CONTAINER aus..."
               sh install.sh
               echo "Konfiguration abgeschlossen."
          else
@@ -50,7 +50,7 @@ case "$SCHRITT" in
               exit 1
          fi
     else
-         echo "FEHLER: Container $TARGET_CONTAINER existiert nicht."
+         echo "FEHLER: Zielcontainer $TARGET_CONTAINER existiert nicht."
          exit 1
     fi
     ;;

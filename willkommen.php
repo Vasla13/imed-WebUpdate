@@ -1,6 +1,6 @@
 <?php
 require_once 'config.php';
-// Détruire la session pour réinitialiser l'état
+// Sitzung zurücksetzen
 session_unset();
 session_destroy();
 
