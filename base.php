@@ -35,7 +35,7 @@
       </div>
     </aside>
 
-    <!-- Hauptinhalt -->
+    <!-- Main content -->
     <main class="main-content">
       <?php if(isset($breadcrumb)): ?>
         <div class="breadcrumb">
@@ -46,7 +46,7 @@
         <h1><?php echo isset($header) ? $header : 'Dorner - Update Verwaltung'; ?></h1>
       </header>
       
-      <!-- Zone d'actions pour admin et user -->
+      <!-- Action buttons -->
       <?php if(isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['admin', 'user'])): ?>
       <div class="action-buttons" style="text-align: left; margin: 20px 0;">
           <a href="#" id="openModalBtn" class="btn" style="margin-right: 10px;">

@@ -10,8 +10,8 @@ require_once 'db.php';
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
 
-    // 1) Archivpfad aus der Tabelle VERSIONS abrufen
-    $stmtSelect = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
+    // Récupérer le chemin de l'archive et le dossier extrait depuis la BDD
+    $stmtSelect = $conn->prepare("SELECT DATEIEN, extracted_folder FROM VERSIONS WHERE ID = ?");
     $stmtSelect->bind_param("i", $id);
     $stmtSelect->execute();
     $resSelect = $stmtSelect->get_result();
@@ -20,23 +20,29 @@ if (isset($_GET['id'])) {
     }
     $row = $resSelect->fetch_assoc();
     $archivePath = $row['DATEIEN'];
+    $extractedFolder = $row['extracted_folder'];
 
-    // 2) Archiv löschen
+    // Supprimer le fichier d’archive dans le dossier uploads (s'il existe)
     if (!empty($archivePath) && file_exists($archivePath)) {
         unlink($archivePath);
     }
+    
+    // Supprimer l’archive copiée dans /imed/prog/new (si elle existe)
+    $archiveBaseName = basename($archivePath);
+    $copiedArchivePath = "/imed/prog/new/" . $archiveBaseName;
+    if (file_exists($copiedArchivePath)) {
+        unlink($copiedArchivePath);
+    }
 
-    // 3) Dossier extrait dans /imed/prog/new
-    $pattern = '/imedWeb_([0-9.]+)_p[0-9]+_gh/i';
-    if (preg_match($pattern, $archivePath, $matches)) {
-        $extractedDirName = "imed-Web_" . $matches[1] . "_gh";
-        $extractedDirPath = "/imed/prog/new/" . $extractedDirName;
+    // Supprimer le dossier extrait complet basé sur extracted_folder
+    if (!empty($extractedFolder)) {
+        $extractedDirPath = "/imed/prog/new/" . $extractedFolder;
         if (is_dir($extractedDirPath)) {
             exec("rm -rf " . escapeshellarg($extractedDirPath));
         }
     }
 
-    // 4) Supprimer la ligne de la table
+    // Supprimer l'entrée dans la table VERSIONS
     $stmtDelete = $conn->prepare("DELETE FROM VERSIONS WHERE ID = ?");
     $stmtDelete->bind_param("i", $id);
     if ($stmtDelete->execute()) {

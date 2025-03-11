@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (strtolower($username) === "admin") {
         $error = "Der Benutzername 'admin' ist reserviert.";
     } else {
-        // Hasher le mdp
+        // Hasher le mot de passe
         $hashed = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
         $role = 'user';
         $stmt = $conn->prepare("INSERT INTO USERS (USERNAME, PASSWORD, ROLE) VALUES (?, ?, ?)");

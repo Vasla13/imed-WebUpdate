@@ -21,8 +21,8 @@ if ($version_id <= 0) {
     die("Keine Version ausgewählt.");
 }
 
-// Chemin de l'archive
-$stmt = $conn->prepare("SELECT DATEIEN FROM VERSIONS WHERE ID = ?");
+// Récupérer le chemin de l'archive et le dossier extrait (si existant) depuis la base
+$stmt = $conn->prepare("SELECT DATEIEN, extracted_folder FROM VERSIONS WHERE ID = ?");
 $stmt->bind_param("i", $version_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,9 +30,10 @@ if (!$result || $result->num_rows === 0) {
     die("Version nicht in der Datenbank gefunden (ID = $version_id).");
 }
 $row = $result->fetch_assoc();
-$web_archiv = $row['DATEIEN']; // Chemin complet vers l’archive
+$web_archiv = $row['DATEIEN'];
+$current_extracted_folder = $row['extracted_folder'];
 
-// Vérifier le fichier pour les étapes 1 et 2
+// Vérifier l'existence du fichier pour les étapes 1 et 2
 if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
     die("Die Datei existiert nicht auf dem Server: " . htmlspecialchars($web_archiv));
 }
@@ -43,44 +44,44 @@ if (!file_exists($script_path)) {
     die("Installationsskript nicht gefunden: " . htmlspecialchars($script_path));
 }
 
-// Affichage direct
+// Préparer l'affichage direct
 header('Content-Type: text/html; charset=utf-8');
 @ini_set('output_buffering','off');
 @ini_set('zlib.output_compression', 0);
 set_time_limit(0);
 
-echo "<!DOCTYPE html>\n";
-echo "<html lang='de'>\n";
-echo "<head>\n";
-echo "  <meta charset='UTF-8'>\n";
+echo "<!DOCTYPE html>\n<html lang='de'>\n<head>\n  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
-    // redirection auto en 5s
     echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
 echo "  <link rel='stylesheet' href='style.css'>\n";
-// On conserve le script d'auto-scroll
 echo "  <script>
         setInterval(function() {
-            window.scrollTo(0, document.body.scrollHeight);
+            var container = document.querySelector('.install-container');
+            if (container) { container.scrollTop = container.scrollHeight; }
         }, 500);
       </script>\n";
-echo "</head>\n";
-echo "<body>\n";
-echo "<div class='install-container' style='max-width:1000px; margin: 20px auto;'>\n";
-echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n";
-// Ici, on utilise l'ancien style inline pour le bloc <pre>
-echo "<pre style='background:rgba(255,255,255,0.1); border-radius:6px; padding:15px;'>\n";
+echo "</head>\n<body>\n<div class='install-container'>\n";
+echo "<h2>Installation der Version #" . htmlspecialchars($version_id) . " - Schritt $schritt</h2>\n<pre>\n";
 ob_flush();
 flush();
 
-if ($schritt === 1 || $schritt === 2) {
-    // Exécuter le script shell
+if ($schritt === 1) {
+    // Créer un dossier conteneur unique dans /imed/prog/new
+    $uniqueContainer = "install_" . $version_id . "_" . time();
+    $targetContainer = "/imed/prog/new/" . $uniqueContainer;
+    if (!is_dir($targetContainer)) {
+        mkdir($targetContainer, 0755, true);
+    }
+    
+    // Appeler le script shell en passant le dossier conteneur
     $command = sprintf(
-        'sh %s %s %d 2>&1',
+        'sh %s %s %d %s 2>&1',
         escapeshellarg($script_path),
         escapeshellarg($web_archiv),
-        $schritt
+        $schritt,
+        escapeshellarg($targetContainer)
     );
     
     $descriptorspec = [
@@ -107,26 +108,81 @@ if ($schritt === 1 || $schritt === 2) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // MAJ BDD
-            $newStatus = $schritt;
-            $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
-            $updateStmt->bind_param("ii", $newStatus, $version_id);
-            $updateStmt->execute();
-            
-            if ($schritt === 1) {
-                echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
-                echo "</pre>";
-                echo "<script>
-                        setTimeout(function() {
-                            window.location.href = '{$backPage}';
-                        }, 5000);
-                      </script>";
-                echo "<p><a href='{$backPage}' class='btn'>Sofort zurückkehren</a></p>";
-                echo "</div></body></html>";
-                ob_flush();
-                flush();
-                exit();
+            // Après extraction, chercher le dossier extrait dans le container
+            $cmd = "find " . escapeshellarg($targetContainer) . " -maxdepth 1 -type d -name 'imed-Web_*_gh' | sort | head -n 1";
+            $extractedSubfolder = trim(shell_exec($cmd));
+            if (!$extractedSubfolder) {
+                die("ERREUR: Kein extrahiertes Verzeichnis gefunden.");
             }
+            // Extraire le nom du sous-dossier extrait
+            $extractedFolderName = basename($extractedSubfolder);
+            // Conserver la structure : <uniqueContainer>/<extractedFolderName>
+            $finalExtractedFolder = $uniqueContainer . "/" . $extractedFolderName;
+            $newStatus = 1; // Extraction réussie
+            $stmtUpdate = $conn->prepare("UPDATE VERSIONS SET installation_status = ?, extracted_folder = ? WHERE ID = ?");
+            $stmtUpdate->bind_param("isi", $newStatus, $finalExtractedFolder, $version_id);
+            $stmtUpdate->execute();
+            echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
+            echo "</pre>";
+            echo "<script>
+                    setTimeout(function() {
+                        window.location.href = '{$backPage}';
+                    }, 5000);
+                  </script>";
+            echo "<p><a href='{$backPage}' class='btn'>Sofort zurückkehren</a></p>";
+            echo "</div></body></html>";
+            ob_flush();
+            flush();
+            exit();
+        } else {
+            echo "Fehler beim Ausführen von Schritt $schritt (Code $return_code).";
+        }
+    } else {
+        echo "Fehler: Prozessstart des Installationsskripts nicht möglich.";
+    }
+} elseif ($schritt === 2) {
+    // Étape 2 : utiliser le dossier extrait enregistré en base
+    if (empty($current_extracted_folder)) {
+       die("Kein extrahiertes Verzeichnis in der Datenbank gefunden.");
+    }
+    $targetContainer = "/imed/prog/new/" . $current_extracted_folder;
+    
+    $command = sprintf(
+        'sh %s %s %d %s 2>&1',
+        escapeshellarg($script_path),
+        escapeshellarg($web_archiv),
+        $schritt,
+        escapeshellarg($targetContainer)
+    );
+    
+    $descriptorspec = [
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w'],
+    ];
+    $process = proc_open($command, $descriptorspec, $pipes);
+    
+    if (is_resource($process)) {
+        while (($line = fgets($pipes[1])) !== false) {
+            echo htmlspecialchars($line);
+            ob_flush();
+            flush();
+        }
+        while (($line = fgets($pipes[2])) !== false) {
+            echo htmlspecialchars($line);
+            ob_flush();
+            flush();
+        }
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        
+        $return_code = proc_close($process);
+        echo "\n---\n";
+        if ($return_code === 0) {
+            echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
+            $newStatus = 2;
+            $stmtUpdate = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
+            $stmtUpdate->bind_param("ii", $newStatus, $version_id);
+            $stmtUpdate->execute();
         } else {
             echo "Fehler beim Ausführen von Schritt $schritt (Code $return_code).";
         }
@@ -134,33 +190,31 @@ if ($schritt === 1 || $schritt === 2) {
         echo "Fehler: Prozessstart des Installationsskripts nicht möglich.";
     }
 } elseif ($schritt === 3) {
-    $updateStmt = $conn->prepare("UPDATE VERSIONS SET installation_status = 3 WHERE ID = ?");
-    $updateStmt->bind_param("i", $version_id);
-    $updateStmt->execute();
-    // Tenter de trouver le dossier extrait
-    $cmd = "find /imed/prog/new -maxdepth 1 -type d -name 'imed-Web_*' | sort | head -n 1";
-    $extractedDir = trim(shell_exec($cmd));
-    if ($extractedDir) {
-         $baseName = basename($extractedDir);
-         $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
-         $siteLink = "http://{$server_ip}/{$baseName}/imed-Info/framework.php";
-    } else {
-         $siteLink = "#";
+    // Étape 3 : Mise à jour du statut et affichage du lien
+    if (empty($current_extracted_folder)) {
+       die("Kein extrahiertes Verzeichnis in der Datenbank gefunden.");
     }
+    $newStatus = 3;
+    $stmtUpdate = $conn->prepare("UPDATE VERSIONS SET installation_status = ? WHERE ID = ?");
+    $stmtUpdate->bind_param("ii", $newStatus, $version_id);
+    $stmtUpdate->execute();
+    
+    $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
+    // Le lien est construit à partir de la valeur enregistrée dans extracted_folder
+    $siteLink = "http://{$server_ip}/install/" . $current_extracted_folder . "/imed-Info/framework.php";
+    
     echo "</pre>\n";
-    echo "<div class='install-success' style='text-align: center; margin: 20px;'>";
-    echo "<h2>Die Installation ist abgeschlossen.</h2>";
-    echo "<p>Sie können nun auf die Webseite zugreifen:</p>";
-    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>";
-    echo "</div>";
+    echo "<div class='install-success'>\n";
+    echo "<h2>Die Installation ist abgeschlossen.</h2>\n";
+    echo "<p>Sie können nun auf die Webseite zugreifen:</p>\n";
+    echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>\n";
+    echo "</div>\n";
 } else {
     echo "Unbekannter Schritt.";
 }
 
 echo "<p><a href='{$backPage}' class='btn'>Zurück zur {$backPageText}</a></p>\n";
-echo "</div>\n";
-echo "</body>\n";
-echo "</html>\n";
+echo "</div>\n</body>\n</html>\n";
 
 ob_flush();
 flush();

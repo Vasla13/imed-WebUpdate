@@ -1,5 +1,5 @@
 <?php
-// db.php – Verbindung zur MySQL-Datenbank
+// db.php – Connexion à la base de données MySQL
 $host = 'localhost';
 $dbname = 'UPDATEVERWALTUNG';
 $username = 'imed';

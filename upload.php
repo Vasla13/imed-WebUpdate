@@ -2,7 +2,7 @@
 require_once 'config.php';
 require_once 'db.php';
 
-// Fonction pour convertir des notations comme "5G" en bytes
+// Fonction pour convertir des tailles telles que "5G" en octets
 function return_bytes($val) {
     $val = trim($val);
     $last = strtolower($val[strlen($val) - 1]);
@@ -15,7 +15,7 @@ function return_bytes($val) {
     return $val;
 }
 
-// Vérifier la taille POST
+// Vérifier la taille des données POST
 $postMaxSize = return_bytes(ini_get('post_max_size'));
 if (isset($_SERVER['CONTENT_LENGTH']) && (int)$_SERVER['CONTENT_LENGTH'] > $postMaxSize) {
     die("Fehler: Die gesamte Datenmenge überschreitet das post_max_size-Limit (" . ini_get('post_max_size') . ").");
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die("Unberechtigter Zugriff.");
 }
 
-// Autoriser admin et user
+// Seuls les administrateurs et les utilisateurs enregistrés peuvent uploader
 if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin','user'])) {
     die("Nur Administratoren und registrierte Benutzer dürfen Dateien hochladen.");
 }
@@ -39,7 +39,7 @@ if ($upload_mode === 'internet') {
     if (empty($file_url) || !filter_var($file_url, FILTER_VALIDATE_URL)) {
         die("Fehler: Ungültige oder fehlende URL.");
     }
-    // On stocke l'URL directement dans la base de données
+    // L'URL est enregistrée directement dans la base
     $targetFile = $file_url;
 } else {
     // Mode local : traiter le fichier uploadé
@@ -59,7 +59,7 @@ if ($upload_mode === 'internet') {
             die("Fehler: Ungültiger Dateityp.");
         }
 
-        // Dossier d'upload
+        // Dossier de destination
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
@@ -73,7 +73,7 @@ if ($upload_mode === 'internet') {
             die("Fehler beim Verschieben der Datei.");
         }
     } else {
-        // Gérer les erreurs d'upload
+        // Gérer l'erreur d'upload
         $error_code = isset($_FILES['file']) ? $_FILES['file']['error'] : "Keine Datei hochgeladen";
         $error_message = "";
         switch ($error_code) {
@@ -96,19 +96,19 @@ if ($upload_mode === 'internet') {
     }
 }
 
-// Champs du formulaire
+// Récupérer les champs du formulaire
 $version = $_POST['version'] ?? '';
 $release_date = $_POST['release_date'] ?? '';
 $comment = $_POST['comment'] ?? '';
 
-// Insertion dans la base de données
+// Insertion dans la base
 $stmt = $conn->prepare("INSERT INTO VERSIONS (VERSION, RELEASE_DATE, DATEIEN, COMMENT) VALUES (?, ?, ?, ?)");
 if (!$stmt) {
     die("Fehler bei der Vorbereitung: " . $conn->error);
 }
 $stmt->bind_param("ssss", $version, $release_date, $targetFile, $comment);
 if ($stmt->execute()) {
-    // Redirection vers la page précédente (admin.php ou user.php)
+    // Rediriger vers la page précédente (admin.php ou user.php)
     $redirectUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'user.php';
     header("Location: " . $redirectUrl);
     exit();
