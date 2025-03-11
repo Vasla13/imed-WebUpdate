@@ -39,7 +39,9 @@ if (($schritt === 1 || $schritt === 2) && !file_exists($web_archiv)) {
 }
 
 // Chemin du script shell
-$script_path = "/imed/prog/imed-WebUpdate/lib/install_imed_web.sh";
+$script_path = "lib/install_imed_web.sh"; 
+// (adapté : si besoin, mets le chemin absolu, par ex. "/imed/prog/imed-WebUpdate/lib/install_imed_web.sh")
+
 if (!file_exists($script_path)) {
     die("Installationsskript nicht gefunden: " . htmlspecialchars($script_path));
 }
@@ -52,6 +54,7 @@ set_time_limit(0);
 
 echo "<!DOCTYPE html>\n<html lang='de'>\n<head>\n  <meta charset='UTF-8'>\n";
 if ($schritt === 1) {
+    // on peut laisser un refresh auto, ou non
     echo "  <meta http-equiv='refresh' content='5;url={$backPage}'>\n";
 }
 echo "  <title>Installation von Imed-Web - Schritt $schritt</title>\n";
@@ -68,14 +71,20 @@ ob_flush();
 flush();
 
 if ($schritt === 1) {
-    // Créer un dossier conteneur unique dans /imed/prog/new
-    $uniqueContainer = "install_" . $version_id . "_" . time();
-    $targetContainer = "/imed/prog/new/" . $uniqueContainer;
+    // ============================================
+    // ÉTAPE 1 : On extrait dans UN dossier commun
+    // ============================================
+    
+    // On choisit par exemple /imed/prog/new comme dossier principal
+    $targetContainer = "/imed/prog/new";
+    
+    // On s'assure qu'il existe
     if (!is_dir($targetContainer)) {
         mkdir($targetContainer, 0755, true);
     }
     
     // Appeler le script shell en passant le dossier conteneur
+    // On ne construit plus de sous-dossier unique, on stocke tout dans $targetContainer
     $command = sprintf(
         'sh %s %s %d %s 2>&1',
         escapeshellarg($script_path),
@@ -108,20 +117,26 @@ if ($schritt === 1) {
         echo "\n---\n";
         if ($return_code === 0) {
             echo "Schritt $schritt erfolgreich ausgeführt (Code 0).";
-            // Après extraction, chercher le dossier extrait dans le container
+            
+            // Après extraction, on cherche le dossier extraits (ex : imed-Web_6.005.000.000_gh)
+            // ATTENTION : On cherche dans /imed/prog/new
             $cmd = "find " . escapeshellarg($targetContainer) . " -maxdepth 1 -type d -name 'imed-Web_*_gh' | sort | head -n 1";
             $extractedSubfolder = trim(shell_exec($cmd));
             if (!$extractedSubfolder) {
                 die("ERREUR: Kein extrahiertes Verzeichnis gefunden.");
             }
-            // Extraire le nom du sous-dossier extrait
+            // Extraire le nom du dossier
             $extractedFolderName = basename($extractedSubfolder);
-            // Conserver la structure : <uniqueContainer>/<extractedFolderName>
-            $finalExtractedFolder = $uniqueContainer . "/" . $extractedFolderName;
+            
+            // On enregistre simplement ce nom (ex : "imed-Web_6.005.000.000_gh")
+            // => plus de container "install_<ID>_xxxxx"
+            $finalExtractedFolder = $extractedFolderName;
+            
             $newStatus = 1; // Extraction réussie
             $stmtUpdate = $conn->prepare("UPDATE VERSIONS SET installation_status = ?, extracted_folder = ? WHERE ID = ?");
             $stmtUpdate->bind_param("isi", $newStatus, $finalExtractedFolder, $version_id);
             $stmtUpdate->execute();
+            
             echo "\n\nAutomatische Weiterleitung in 5 Sekunden zur {$backPageText}...";
             echo "</pre>";
             echo "<script>
@@ -140,12 +155,18 @@ if ($schritt === 1) {
     } else {
         echo "Fehler: Prozessstart des Installationsskripts nicht möglich.";
     }
+
 } elseif ($schritt === 2) {
-    // Étape 2 : utiliser le dossier extrait enregistré en base
+    // ============================================
+    // ÉTAPE 2 : on exécute install.sh dans le dossier
+    // ============================================
+    
     if (empty($current_extracted_folder)) {
        die("Kein extrahiertes Verzeichnis in der Datenbank gefunden.");
     }
-    $targetContainer = "/imed/prog/new/" . $current_extracted_folder;
+    
+    $targetContainer = "/imed/prog/new/" . $current_extracted_folder; 
+    // => ex : /imed/prog/new/imed-Web_6.005.000.000_gh
     
     $command = sprintf(
         'sh %s %s %d %s 2>&1',
@@ -189,8 +210,12 @@ if ($schritt === 1) {
     } else {
         echo "Fehler: Prozessstart des Installationsskripts nicht möglich.";
     }
+
 } elseif ($schritt === 3) {
-    // Étape 3 : Mise à jour du statut et affichage du lien
+    // ============================================
+    // ÉTAPE 3 : on finalise le statut
+    // ============================================
+    
     if (empty($current_extracted_folder)) {
        die("Kein extrahiertes Verzeichnis in der Datenbank gefunden.");
     }
@@ -200,8 +225,10 @@ if ($schritt === 1) {
     $stmtUpdate->execute();
     
     $server_ip = $_SERVER['SERVER_ADDR'] ?? 'localhost';
-    // Le lien est construit à partir de la valeur enregistrée dans extracted_folder
-    $siteLink = "http://{$server_ip}/install/" . $current_extracted_folder . "/imed-Info/framework.php";
+    
+    // IMPORTANT : on pointe directement sur "http://IP/imed-Web_6.005.000.000_gh/imed-Info/framework.php"
+    // (plus de /install/ ni container)
+    $siteLink = "http://{$server_ip}/" . $current_extracted_folder . "/imed-Info/framework.php";
     
     echo "</pre>\n";
     echo "<div class='install-success'>\n";
@@ -209,6 +236,7 @@ if ($schritt === 1) {
     echo "<p>Sie können nun auf die Webseite zugreifen:</p>\n";
     echo "<a href='$siteLink' class='btn' target='_blank'><i class='fas fa-globe'></i> Zur Webseite</a>\n";
     echo "</div>\n";
+
 } else {
     echo "Unbekannter Schritt.";
 }
@@ -218,4 +246,3 @@ echo "</div>\n</body>\n</html>\n";
 
 ob_flush();
 flush();
-?>
